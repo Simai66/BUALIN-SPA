@@ -1,14 +1,11 @@
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { Navbar } from '../components/Navbar';
 
 export const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <>
-      <Navbar />
-      <Container>
+    <Container>
         <Row className="my-5">
           <Col md={12} className="text-center">
             <h1>🌸 ยินดีต้อนรับสู่ไทยสปา</h1>
@@ -78,6 +75,5 @@ export const Home = () => {
           </Col>
         </Row>
       </Container>
-    </>
   );
 };

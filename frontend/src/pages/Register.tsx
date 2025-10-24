@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
-import { Navbar } from '../components/Navbar';
 import { authAPI } from '../api/client';
 
 export const Register = () => {
@@ -18,7 +17,7 @@ export const Register = () => {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -26,7 +25,7 @@ export const Register = () => {
     }));
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -46,19 +45,18 @@ export const Register = () => {
       await authAPI.register(formData);
       setSuccess('สมัครสมาชิกสำเร็จ! กรุณาตรวจสอบอีเมลเพื่อยืนยันบัญชี');
       setTimeout(() => navigate('/login'), 3000);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'เกิดข้อผิดพลาด');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || 'เกิดข้อผิดพลาด');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <>
-      <Navbar />
-      <Container>
-        <Row className="justify-content-center mt-5">
-          <Col md={6}>
+    <Container>
+      <Row className="justify-content-center mt-5">
+        <Col md={6}>
             <Card>
               <Card.Body>
                 <h2 className="text-center mb-4">สมัครสมาชิก</h2>
@@ -136,6 +134,5 @@ export const Register = () => {
           </Col>
         </Row>
       </Container>
-    </>
   );
 };

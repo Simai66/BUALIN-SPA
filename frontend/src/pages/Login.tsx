@@ -31,8 +31,9 @@ export const Login = () => {
       const response = await authAPI.login(formData);
       setUser(response.data.user);
       navigate('/');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'เกิดข้อผิดพลาด');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || 'เกิดข้อผิดพลาด');
     } finally {
       setLoading(false);
     }
