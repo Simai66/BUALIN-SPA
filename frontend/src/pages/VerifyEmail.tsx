@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Container, Row, Col, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Navbar } from '../components/Navbar';
 import { authAPI } from '../api/client';
 
 export const VerifyEmail = () => {
@@ -26,9 +25,10 @@ export const VerifyEmail = () => {
         setStatus('success');
         setMessage(response.data.message || 'ยืนยันอีเมลสำเร็จ!');
         setTimeout(() => navigate('/login'), 3000);
-      } catch (error: any) {
+      } catch (error: unknown) {
         setStatus('error');
-        setMessage(error.response?.data?.message || 'เกิดข้อผิดพลาดในการยืนยันอีเมล');
+        const err = error as { response?: { data?: { message?: string } } };
+        setMessage(err.response?.data?.message || 'เกิดข้อผิดพลาดในการยืนยันอีเมล');
       }
     };
 
@@ -36,33 +36,30 @@ export const VerifyEmail = () => {
   }, [searchParams, navigate]);
 
   return (
-    <>
-      <Navbar />
-      <Container>
-        <Row className="justify-content-center mt-5">
-          <Col md={6}>
-            {status === 'loading' && (
-              <div className="text-center">
-                <Spinner animation="border" variant="primary" />
-                <p className="mt-3">กำลังยืนยันอีเมล...</p>
-              </div>
-            )}
-            {status === 'success' && (
-              <Alert variant="success">
-                <Alert.Heading>✓ สำเร็จ!</Alert.Heading>
-                <p>{message}</p>
-                <p className="mb-0">กำลังนำคุณไปหน้าเข้าสู่ระบบ...</p>
-              </Alert>
-            )}
-            {status === 'error' && (
-              <Alert variant="danger">
-                <Alert.Heading>เกิดข้อผิดพลาด</Alert.Heading>
-                <p>{message}</p>
-              </Alert>
-            )}
-          </Col>
-        </Row>
-      </Container>
-    </>
+    <Container>
+      <Row className="justify-content-center mt-5">
+        <Col md={6}>
+          {status === 'loading' && (
+            <div className="text-center">
+              <Spinner animation="border" variant="primary" />
+              <p className="mt-3">กำลังยืนยันอีเมล...</p>
+            </div>
+          )}
+          {status === 'success' && (
+            <Alert variant="success">
+              <Alert.Heading>✓ สำเร็จ!</Alert.Heading>
+              <p>{message}</p>
+              <p className="mb-0">กำลังนำคุณไปหน้าเข้าสู่ระบบ...</p>
+            </Alert>
+          )}
+          {status === 'error' && (
+            <Alert variant="danger">
+              <Alert.Heading>เกิดข้อผิดพลาด</Alert.Heading>
+              <p>{message}</p>
+            </Alert>
+          )}
+        </Col>
+      </Row>
+    </Container>
   );
 };

@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Container, Row, Col, Button, Alert, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { Navbar } from '../components/Navbar';
 import { bookingsAPI } from '../api/client';
 import { useBookingStore } from '../store';
 import { TimeBlockGrid } from '../components/TimeBlockGrid';
@@ -72,69 +71,66 @@ export const BookingDatetime = () => {
   maxDate.setDate(maxDate.getDate() + 30);
 
   return (
-    <>
-      <Navbar />
-      <Container className="my-5">
-        <div className="mb-4">
-          <h2>จองบริการ - ขั้นตอนที่ 3/3</h2>
-          <p className="text-muted">เลือกวันและเวลา</p>
-        </div>
+    <Container className="my-5">
+      <div className="mb-4">
+        <h2>จองบริการ - ขั้นตอนที่ 3/3</h2>
+        <p className="text-muted">เลือกวันและเวลา</p>
+      </div>
 
-        <Row className="mb-4">
-          <Col md={6}>
-            <Alert variant="info">
-              <strong>บริการ:</strong> {selectedService?.name}<br />
-              <strong>พนักงาน:</strong> {selectedTherapist?.name}<br />
-              <strong>ระยะเวลา:</strong> {selectedService?.duration_minutes} นาที
-            </Alert>
-          </Col>
-          <Col md={6}>
-            <Form.Group>
-              <Form.Label>เลือกวันที่</Form.Label>
-              <Form.Control
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                min={minDate.toISOString().split('T')[0]}
-                max={maxDate.toISOString().split('T')[0]}
-              />
-              <Form.Text className="text-muted">
-                สามารถจองล่วงหน้าได้ 1-30 วัน
-              </Form.Text>
-            </Form.Group>
-          </Col>
-        </Row>
+      <Row className="mb-4">
+        <Col md={6}>
+          <Alert variant="info">
+            <strong>บริการ:</strong> {selectedService?.name}<br />
+            <strong>พนักงาน:</strong> {selectedTherapist?.name}<br />
+            <strong>ระยะเวลา:</strong> {selectedService?.duration_minutes} นาที
+          </Alert>
+        </Col>
+        <Col md={6}>
+          <Form.Group>
+            <Form.Label>เลือกวันที่</Form.Label>
+            <Form.Control
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              min={minDate.toISOString().split('T')[0]}
+              max={maxDate.toISOString().split('T')[0]}
+            />
+            <Form.Text className="text-muted">
+              สามารถจองล่วงหน้าได้ 1-30 วัน
+            </Form.Text>
+          </Form.Group>
+        </Col>
+      </Row>
 
-        {error && <Alert variant="danger">{error}</Alert>}
+      {error && <Alert variant="danger">{error}</Alert>}
 
-        {loading ? (
-          <div className="text-center py-5">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">กำลังโหลด...</span>
-            </div>
+      {loading ? (
+        <div className="text-center py-5">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">กำลังโหลด...</span>
           </div>
-        ) : (
-          <>
-            {slots.length > 0 ? (
-              <TimeBlockGrid
-                slots={slots}
-                onSelectSlot={handleSelectSlot}
-                durationMinutes={selectedService?.duration_minutes || 60}
-              />
-            ) : (
-              <Alert variant="warning">
-                ไม่มีช่วงเวลาว่างในวันที่เลือก กรุณาเลือกวันอื่น
-              </Alert>
-            )}
+        </div>
+      ) : (
+        <>
+          {slots.length > 0 ? (
+            <TimeBlockGrid
+              slots={slots}
+              onSelectSlot={handleSelectSlot}
+              durationMinutes={selectedService?.duration_minutes || 60}
+            />
+          ) : (
+            <Alert variant="warning">
+              ไม่มีช่วงเวลาว่างในวันที่เลือก กรุณาเลือกวันอื่น
+            </Alert>
+          )}
 
-            <div className="mt-4">
-              <Button variant="secondary" onClick={handleBack}>
-                ← ย้อนกลับ
-              </Button>
-            </div>
-          </>
-        )}
-      </Container>
-    </>
+          <div className="mt-4">
+            <Button variant="secondary" onClick={handleBack}>
+              ← ย้อนกลับ
+            </Button>
+          </div>
+        </>
+      )}
+    </Container>
   );
 };

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Container, Card, Row, Col, Button, Alert, ListGroup, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { Navbar } from '../components/Navbar';
 import { bookingsAPI } from '../api/client';
 import { useBookingStore } from '../store';
 
@@ -32,7 +31,7 @@ export const BookingConfirm = () => {
     setLoading(true);
     setError('');
     try {
-      await bookingsAPI.createBooking({
+      await bookingsAPI.create({
         service_id: selectedService.id,
         therapist_id: selectedTherapist.id,
         booking_datetime: selectedDatetime.toISOString(),
@@ -61,90 +60,87 @@ export const BookingConfirm = () => {
   };
 
   return (
-    <>
-      <Navbar />
-      <Container className="my-5">
-        <div className="mb-4">
-          <h2>ยืนยันการจองบริการ</h2>
-          <p className="text-muted">โปรดตรวจสอบข้อมูลก่อนยืนยันการจอง</p>
-        </div>
+    <Container className="my-5">
+      <div className="mb-4">
+        <h2>ยืนยันการจองบริการ</h2>
+        <p className="text-muted">โปรดตรวจสอบข้อมูลก่อนยืนยันการจอง</p>
+      </div>
 
-        {error && <Alert variant="danger">{error}</Alert>}
+      {error && <Alert variant="danger">{error}</Alert>}
 
-        <Card className="shadow-sm">
-          <Card.Header className="bg-primary text-white">
-            <h5 className="mb-0">รายละเอียดการจอง</h5>
-          </Card.Header>
-          <Card.Body>
-            <ListGroup variant="flush">
-              <ListGroup.Item>
-                <Row>
-                  <Col sm={4} className="fw-bold">บริการ:</Col>
-                  <Col sm={8}>{selectedService.name}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col sm={4} className="fw-bold">รายละเอียด:</Col>
-                  <Col sm={8}>{selectedService.description}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col sm={4} className="fw-bold">ระยะเวลา:</Col>
-                  <Col sm={8}>{selectedService.duration_minutes} นาที</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col sm={4} className="fw-bold">พนักงาน:</Col>
-                  <Col sm={8}>{selectedTherapist.name}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col sm={4} className="fw-bold">วันและเวลา:</Col>
-                  <Col sm={8}>{formatDateTime(selectedDatetime)}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col sm={4} className="fw-bold">ราคา:</Col>
-                  <Col sm={8} className="text-success fw-bold fs-5">
-                    {selectedService.base_price?.toLocaleString('th-TH')} บาท
-                  </Col>
-                </Row>
-              </ListGroup.Item>
-            </ListGroup>
+      <Card className="shadow-sm">
+        <Card.Header className="bg-primary text-white">
+          <h5 className="mb-0">รายละเอียดการจอง</h5>
+        </Card.Header>
+        <Card.Body>
+          <ListGroup variant="flush">
+            <ListGroup.Item>
+              <Row>
+                <Col sm={4} className="fw-bold">บริการ:</Col>
+                <Col sm={8}>{selectedService.name}</Col>
+              </Row>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Row>
+                <Col sm={4} className="fw-bold">รายละเอียด:</Col>
+                <Col sm={8}>{selectedService.description}</Col>
+              </Row>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Row>
+                <Col sm={4} className="fw-bold">ระยะเวลา:</Col>
+                <Col sm={8}>{selectedService.duration_minutes} นาที</Col>
+              </Row>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Row>
+                <Col sm={4} className="fw-bold">พนักงาน:</Col>
+                <Col sm={8}>{selectedTherapist.name}</Col>
+              </Row>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Row>
+                <Col sm={4} className="fw-bold">วันและเวลา:</Col>
+                <Col sm={8}>{formatDateTime(selectedDatetime)}</Col>
+              </Row>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Row>
+                <Col sm={4} className="fw-bold">ราคา:</Col>
+                <Col sm={8} className="text-success fw-bold fs-5">
+                  {selectedService.base_price?.toLocaleString('th-TH')} บาท
+                </Col>
+              </Row>
+            </ListGroup.Item>
+          </ListGroup>
 
-            <Alert variant="info" className="mt-3 mb-0">
-              <strong>หมายเหตุ:</strong> ราคาสุดท้ายจะคำนวณตามโปรโมชั่นที่มีอยู่ในขณะนั้น
-              และจะแสดงในอีเมลยืนยันการจองที่จะส่งให้ท่าน
-            </Alert>
-          </Card.Body>
-        </Card>
+          <Alert variant="info" className="mt-3 mb-0">
+            <strong>หมายเหตุ:</strong> ราคาสุดท้ายจะคำนวณตามโปรโมชั่นที่มีอยู่ในขณะนั้น
+            และจะแสดงในอีเมลยืนยันการจองที่จะส่งให้ท่าน
+          </Alert>
+        </Card.Body>
+      </Card>
 
-        <div className="mt-4 d-flex justify-content-between">
-          <Button variant="secondary" onClick={handleBack} disabled={loading}>
-            ← ย้อนกลับ
-          </Button>
-          <Button
-            variant="success"
-            onClick={handleConfirm}
-            disabled={loading}
-            size="lg"
-          >
-            {loading ? (
-              <>
-                <span className="spinner-border spinner-border-sm me-2" />
-                กำลังดำเนินการ...
-              </>
-            ) : (
-              'ยืนยันการจอง'
-            )}
-          </Button>
-        </div>
-      </Container>
+      <div className="mt-4 d-flex justify-content-between">
+        <Button variant="secondary" onClick={handleBack} disabled={loading}>
+          ← ย้อนกลับ
+        </Button>
+        <Button
+          variant="success"
+          onClick={handleConfirm}
+          disabled={loading}
+          size="lg"
+        >
+          {loading ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" />
+              กำลังดำเนินการ...
+            </>
+          ) : (
+            'ยืนยันการจอง'
+          )}
+        </Button>
+      </div>
 
       {/* Success Modal */}
       <Modal show={showModal} onHide={handleModalClose} centered>
@@ -177,6 +173,6 @@ export const BookingConfirm = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
+    </Container>
   );
 };
