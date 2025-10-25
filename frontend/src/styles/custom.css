@@ -1,0 +1,637 @@
+/* ===================================
+   Thai Spa - Custom Styles
+   Inspired by Remedy Lane Design
+   =================================== */
+
+/* Google Fonts - Elegant Serif */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+    /* Color Palette - Warm & Calming */
+    --primary-color: #c57b57;
+    /* Terracotta/Coral */
+    --primary-dark: #a86444;
+    --primary-light: #d99378;
+    --secondary-color: #5a6c57;
+    /* Sage Green */
+    --accent-color: #e8d5c4;
+    /* Cream */
+    --text-dark: #2c2c2c;
+    --text-light: #6b6b6b;
+    --background-light: #faf8f6;
+    --white: #ffffff;
+
+    /* Typography */
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Poppins', sans-serif;
+
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+    --spacing-xl: 4rem;
+
+    /* Transitions */
+    --transition: all 0.3s ease;
+}
+
+/* ===================================
+   Global Styles
+   =================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--text-dark);
+    background-color: var(--background-light);
+    line-height: 1.7;
+    overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text-dark);
+}
+
+h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+}
+
+h2 {
+    font-size: 2.8rem;
+    margin-bottom: 1.2rem;
+}
+
+h3 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+p {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+/* ===================================
+   Navbar Styles
+   =================================== */
+
+.navbar {
+    background-color: var(--white) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 1.2rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar-brand {
+    font-family: var(--font-heading);
+    font-size: 1.8rem !important;
+    color: var(--primary-color) !important;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+.nav-link {
+    color: var(--text-dark) !important;
+    font-weight: 400;
+    font-size: 1rem;
+    padding: 0.5rem 1.2rem !important;
+    transition: var(--transition);
+    text-transform: capitalize;
+}
+
+.nav-link:hover {
+    color: var(--primary-color) !important;
+}
+
+.navbar .btn {
+    background-color: var(--primary-color);
+    border: none;
+    color: var(--white);
+    padding: 0.6rem 1.8rem;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.navbar .btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+/* ===================================
+   Hero Section
+   =================================== */
+
+.hero-section {
+    height: 85vh;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(197, 123, 87, 0.85), rgba(90, 108, 87, 0.75)),
+        url('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1600') center/cover;
+    color: var(--white);
+    text-align: center;
+    position: relative;
+    margin-top: -2rem;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    padding: 2rem;
+    animation: fadeInUp 1s ease;
+}
+
+.hero-title {
+    font-size: 4.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--white);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.95);
+    font-family: var(--font-body);
+}
+
+.hero-btn {
+    background-color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    color: var(--white);
+    padding: 1rem 3rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: var(--transition);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.hero-btn:hover {
+    background-color: transparent;
+    color: var(--white);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===================================
+   Section Styles
+   =================================== */
+
+.section {
+    padding: var(--spacing-xl) 0;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    font-size: 3rem;
+    color: var(--text-dark);
+}
+
+.section-subtitle {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto var(--spacing-lg);
+    font-size: 1.2rem;
+    color: var(--text-light);
+}
+
+/* ===================================
+   Feature Cards
+   =================================== */
+
+.feature-card {
+    background: var(--white);
+    border: none;
+    border-radius: 12px;
+    padding: 2.5rem;
+    text-align: center;
+    transition: var(--transition);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    height: 100%;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.feature-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.feature-card p {
+    color: var(--text-light);
+    font-size: 1rem;
+}
+
+/* ===================================
+   Service Cards
+   =================================== */
+
+.service-card {
+    background: var(--white);
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: var(--transition);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    height: 100%;
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+}
+
+.service-card img {
+    height: 250px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.service-card-body {
+    padding: 2rem;
+}
+
+.service-card h5 {
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+    color: var(--text-dark);
+}
+
+.service-price {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    margin: 1rem 0;
+}
+
+.service-badge {
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-block;
+    margin-top: 0.5rem;
+}
+
+/* ===================================
+   Buttons
+   =================================== */
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+    color: var(--white);
+    padding: 0.8rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(197, 123, 87, 0.3);
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    background: transparent;
+    padding: 0.8rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+    transform: translateY(-2px);
+}
+
+/* ===================================
+   Forms
+   =================================== */
+
+.form-control {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(197, 123, 87, 0.15);
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+/* ===================================
+   About Section
+   =================================== */
+
+.about-section {
+    background-color: var(--accent-color);
+    border-radius: 20px;
+    padding: var(--spacing-lg);
+}
+
+.about-section h3 {
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+}
+
+.about-section p {
+    color: var(--text-light);
+    line-height: 1.8;
+}
+
+/* ===================================
+   Footer (if needed)
+   =================================== */
+
+.footer {
+    background-color: var(--text-dark);
+    color: var(--white);
+    padding: 2rem 0;
+    text-align: center;
+    margin-top: var(--spacing-xl);
+}
+
+/* ===================================
+   Responsive Design
+   =================================== */
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.8rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    .section-title {
+        font-size: 2.2rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.5rem !important;
+    }
+}
+
+/* ===================================
+   Utility Classes
+   =================================== */
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.mt-5 {
+    margin-top: var(--spacing-lg) !important;
+}
+
+.mb-5 {
+    margin-bottom: var(--spacing-lg) !important;
+}
+
+.py-5 {
+    padding-top: var(--spacing-lg) !important;
+    padding-bottom: var(--spacing-lg) !important;
+}
+
+/* ===================================
+   Footer Styles
+   =================================== */
+
+.footer {
+    background-color: var(--background-light);
+    border-top: 1px solid #e0e0e0;
+    margin-top: var(--spacing-xl);
+    color: var(--text-light);
+}
+
+.footer-title {
+    font-family: var(--font-heading);
+    color: var(--text-dark);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.footer-description {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+}
+
+/* Footer Social Icons */
+.footer-social {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.social-icon:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+    transform: translateY(-3px);
+}
+
+.social-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Footer Links */
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 1rem;
+    transition: var(--transition);
+    display: inline-block;
+}
+
+.footer-links a:hover {
+    color: var(--primary-color);
+    padding-left: 5px;
+}
+
+/* Footer Contact */
+.footer-contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-contact li {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.footer-contact a {
+    color: var(--text-light);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.footer-contact a:hover {
+    color: var(--primary-color);
+}
+
+.contact-icon {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 2rem;
+    margin-top: 2rem;
+}
+
+.footer-copyright {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.footer-note {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+.footer-note em {
+    color: var(--primary-color);
+}
+
+/* Footer Responsive */
+@media (max-width: 768px) {
+    .footer-bottom {
+        text-align: center;
+    }
+
+    .footer-social {
+        justify-content: center;
+        margin-bottom: 2rem;
+    }
+
+    .footer-title {
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .footer-links,
+    .footer-contact {
+        text-align: center;
+    }
+}

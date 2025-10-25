@@ -30,7 +30,7 @@ export const BookingTherapist = () => {
         const response = await therapistsAPI.getAll();
         setTherapists(response.data.therapists);
       } catch {
-        setError('ไม่สามารถโหลดข้อมูลพนักงานได้');
+        setError('Unable to load therapist data');
       } finally {
         setLoading(false);
       }
@@ -51,12 +51,12 @@ export const BookingTherapist = () => {
   return (
     <Container className="my-5">
       <div className="mb-4">
-        <h2>จองบริการ - ขั้นตอนที่ 2/3</h2>
-        <p className="text-muted">เลือกพนักงาน</p>
+        <h2>Book Service - Step 2/3</h2>
+        <p className="text-muted">Select Your Therapist</p>
         {selectedService && (
           <Alert variant="info">
-            บริการที่เลือก: <strong>{selectedService.name}</strong> (
-            {selectedService.duration_minutes} นาที)
+            Selected Service: <strong>{selectedService.name}</strong> (
+            {selectedService.duration_minutes} mins)
           </Alert>
         )}
       </div>
@@ -66,7 +66,7 @@ export const BookingTherapist = () => {
       {loading ? (
         <div className="text-center py-5">
           <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">กำลังโหลด...</span>
+            <span className="visually-hidden">Loading...</span>
           </div>
         </div>
       ) : (
@@ -99,7 +99,7 @@ export const BookingTherapist = () => {
                       className="w-100"
                       onClick={() => handleSelectTherapist(therapist)}
                     >
-                      เลือกพนักงานคนนี้
+                      Select This Therapist
                     </Button>
                   </Card.Body>
                 </Card>
@@ -109,7 +109,7 @@ export const BookingTherapist = () => {
 
           <div className="mt-4">
             <Button variant="secondary" onClick={handleBack}>
-              ← ย้อนกลับ
+              ← Back
             </Button>
           </div>
         </>

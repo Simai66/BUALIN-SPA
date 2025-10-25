@@ -31,23 +31,23 @@ export const Register = () => {
     setSuccess('');
 
     if (formData.password !== formData.confirmPassword) {
-      setError('รหัสผ่านไม่ตรงกัน');
+      setError('Passwords do not match');
       return;
     }
 
     if (!formData.acceptTerms) {
-      setError('กรุณายอมรับเงื่อนไขการใช้งาน');
+      setError('Please accept the terms and conditions');
       return;
     }
 
     setLoading(true);
     try {
       await authAPI.register(formData);
-      setSuccess('สมัครสมาชิกสำเร็จ! กรุณาตรวจสอบอีเมลเพื่อยืนยันบัญชี');
+      setSuccess('Registration successful! Please check your email to verify your account');
       setTimeout(() => navigate('/login'), 3000);
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
-      setError(error.response?.data?.message || 'เกิดข้อผิดพลาด');
+      setError(error.response?.data?.message || 'An error occurred');
     } finally {
       setLoading(false);
     }
@@ -59,12 +59,12 @@ export const Register = () => {
         <Col md={6}>
             <Card>
               <Card.Body>
-                <h2 className="text-center mb-4">สมัครสมาชิก</h2>
+                <h2 className="text-center mb-4">Sign Up</h2>
                 {error && <Alert variant="danger">{error}</Alert>}
                 {success && <Alert variant="success">{success}</Alert>}
                 <Form onSubmit={handleSubmit}>
                   <Form.Group className="mb-3">
-                    <Form.Label>ชื่อ-นามสกุล</Form.Label>
+                    <Form.Label>Full Name</Form.Label>
                     <Form.Control
                       type="text"
                       name="full_name"
@@ -74,7 +74,7 @@ export const Register = () => {
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
-                    <Form.Label>อีเมล</Form.Label>
+                    <Form.Label>Email</Form.Label>
                     <Form.Control
                       type="email"
                       name="email"
@@ -84,7 +84,7 @@ export const Register = () => {
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
-                    <Form.Label>เบอร์โทร</Form.Label>
+                    <Form.Label>Phone Number</Form.Label>
                     <Form.Control
                       type="tel"
                       name="phone"
@@ -93,7 +93,7 @@ export const Register = () => {
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
-                    <Form.Label>รหัสผ่าน</Form.Label>
+                    <Form.Label>Password</Form.Label>
                     <Form.Control
                       type="password"
                       name="password"
@@ -103,7 +103,7 @@ export const Register = () => {
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
-                    <Form.Label>ยืนยันรหัสผ่าน</Form.Label>
+                    <Form.Label>Confirm Password</Form.Label>
                     <Form.Control
                       type="password"
                       name="confirmPassword"
@@ -116,18 +116,18 @@ export const Register = () => {
                     <Form.Check
                       type="checkbox"
                       name="acceptTerms"
-                      label="ยอมรับเงื่อนไขการใช้งาน"
+                      label="I accept the terms and conditions"
                       checked={formData.acceptTerms}
                       onChange={handleChange}
                       required
                     />
                   </Form.Group>
                   <Button variant="primary" type="submit" className="w-100" disabled={loading}>
-                    {loading ? 'กำลังสมัคร...' : 'สมัครสมาชิก'}
+                    {loading ? 'Signing up...' : 'Sign Up'}
                   </Button>
                 </Form>
                 <div className="text-center mt-3">
-                  มีบัญชีอยู่แล้ว? <Link to="/login">เข้าสู่ระบบ</Link>
+                  Already have an account? <Link to="/login">Login</Link>
                 </div>
               </Card.Body>
             </Card>

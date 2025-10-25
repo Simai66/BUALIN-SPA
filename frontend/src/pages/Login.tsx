@@ -45,11 +45,11 @@ export const Login = () => {
         <Col md={5}>
           <Card>
             <Card.Body>
-              <h2 className="text-center mb-4">เข้าสู่ระบบ</h2>
+              <h2 className="text-center mb-4">Login</h2>
               {error && <Alert variant="danger">{error}</Alert>}
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
-                  <Form.Label>อีเมล</Form.Label>
+                  <Form.Label>Email</Form.Label>
                   <Form.Control
                     type="email"
                     name="email"
@@ -60,7 +60,7 @@ export const Login = () => {
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
-                  <Form.Label>รหัสผ่าน</Form.Label>
+                  <Form.Label>Password</Form.Label>
                   <Form.Control
                     type="password"
                     name="password"
@@ -71,11 +71,11 @@ export const Login = () => {
                   />
                 </Form.Group>
                 <Button variant="primary" type="submit" className="w-100" disabled={loading}>
-                  {loading ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
+                  {loading ? 'Logging in...' : 'Login'}
                 </Button>
               </Form>
               <div className="text-center mt-3">
-                ยังไม่มีบัญชี? <Link to="/register">สมัครสมาชิก</Link>
+                Don't have an account? <Link to="/register">Sign Up</Link>
               </div>
             </Card.Body>
           </Card>

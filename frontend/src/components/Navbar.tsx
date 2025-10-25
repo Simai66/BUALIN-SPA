@@ -18,30 +18,43 @@ export const Navbar = () => {
   };
 
   return (
-    <BSNavbar bg="primary" variant="dark" expand="lg" className="mb-4">
+    <BSNavbar bg="light" variant="light" expand="lg" className="navbar">
       <Container>
-        <BSNavbar.Brand as={Link} to="/">🌸 ไทยสปา</BSNavbar.Brand>
+        <BSNavbar.Brand as={Link} to="/" className="navbar-brand">
+          <span className="logo">BUALIN</span> 
+        </BSNavbar.Brand>
         <BSNavbar.Toggle aria-controls="basic-navbar-nav" />
         <BSNavbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link as={Link} to="/">หน้าแรก</Nav.Link>
-            <Nav.Link as={Link} to="/services">บริการ</Nav.Link>
+            <Nav.Link as={Link} to="/">Home</Nav.Link>
+            <Nav.Link as={Link} to="/services">Services</Nav.Link>
             {isAuthenticated && user?.role === 'admin' && (
-              <Nav.Link as={Link} to="/admin">แอดมิน</Nav.Link>
+              <Nav.Link as={Link} to="/admin">Dashboard</Nav.Link>
             )}
           </Nav>
-          <Nav>
+          <Nav className="align-items-center">
             {isAuthenticated ? (
               <>
-                <Nav.Link disabled>สวัสดี, {user?.full_name}</Nav.Link>
-                <Button variant="outline-light" size="sm" onClick={handleLogout}>
-                  ออกจากระบบ
+                <span className="nav-link" style={{ cursor: 'default' }}>
+                  Hello, {user?.full_name}
+                </span>
+                <Button 
+                  variant="outline-primary" 
+                  size="sm" 
+                  onClick={handleLogout}
+                  style={{ marginLeft: '1rem' }}
+                >
+                  Logout
                 </Button>
               </>
             ) : (
               <>
-                <Nav.Link as={Link} to="/login">เข้าสู่ระบบ</Nav.Link>
-                <Nav.Link as={Link} to="/register">สมัครสมาชิก</Nav.Link>
+                <Nav.Link as={Link} to="/login">Login</Nav.Link>
+                <Link to="/register" style={{ marginLeft: '1rem', textDecoration: 'none' }}>
+                  <Button variant="primary" size="sm">
+                    Sign Up
+                  </Button>
+                </Link>
               </>
             )}
           </Nav>

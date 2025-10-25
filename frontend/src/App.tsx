@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/custom.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useAuthStore } from './store';
@@ -14,6 +15,7 @@ import { BookingDatetime } from './pages/BookingDatetime';
 import { BookingConfirm } from './pages/BookingConfirm';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Navbar } from './components/Navbar';
+import { Footer } from './components/footer';
 
 const ProtectedRoute = ({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) => {
   const { isAuthenticated, user } = useAuthStore();
@@ -98,8 +100,9 @@ function App() {
           }
         />
         
-        <Route path="*" element={<div className="text-center mt-5"><h1>404 - ไม่พบหน้านี้</h1></div>} />
+        <Route path="*" element={<div className="text-center mt-5"><h1>404 - Page Not Found</h1></div>} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

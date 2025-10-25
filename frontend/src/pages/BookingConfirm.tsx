@@ -40,9 +40,9 @@ export const BookingConfirm = () => {
     } catch (err: unknown) {
       if (err && typeof err === 'object' && 'response' in err) {
         const axiosError = err as { response?: { data?: { message?: string } } };
-        setError(axiosError.response?.data?.message || 'เกิดข้อผิดพลาดในการจองบริการ');
+        setError(axiosError.response?.data?.message || 'An error occurred while booking the service');
       } else {
-        setError('เกิดข้อผิดพลาดในการจองบริการ');
+        setError('An error occurred while booking the service');
       }
     } finally {
       setLoading(false);
@@ -62,68 +62,68 @@ export const BookingConfirm = () => {
   return (
     <Container className="my-5">
       <div className="mb-4">
-        <h2>ยืนยันการจองบริการ</h2>
-        <p className="text-muted">โปรดตรวจสอบข้อมูลก่อนยืนยันการจอง</p>
+        <h2>Confirm Booking</h2>
+        <p className="text-muted">Please review the information before confirming your booking</p>
       </div>
 
       {error && <Alert variant="danger">{error}</Alert>}
 
       <Card className="shadow-sm">
         <Card.Header className="bg-primary text-white">
-          <h5 className="mb-0">รายละเอียดการจอง</h5>
+          <h5 className="mb-0">Booking Details</h5>
         </Card.Header>
         <Card.Body>
           <ListGroup variant="flush">
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">บริการ:</Col>
+                <Col sm={4} className="fw-bold">Service:</Col>
                 <Col sm={8}>{selectedService.name}</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">รายละเอียด:</Col>
+                <Col sm={4} className="fw-bold">Description:</Col>
                 <Col sm={8}>{selectedService.description}</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">ระยะเวลา:</Col>
-                <Col sm={8}>{selectedService.duration_minutes} นาที</Col>
+                <Col sm={4} className="fw-bold">Duration:</Col>
+                <Col sm={8}>{selectedService.duration_minutes} mins</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">พนักงาน:</Col>
+                <Col sm={4} className="fw-bold">Therapist:</Col>
                 <Col sm={8}>{selectedTherapist.name}</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">วันและเวลา:</Col>
+                <Col sm={4} className="fw-bold">Date & Time:</Col>
                 <Col sm={8}>{formatDateTime(selectedDatetime)}</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">ราคา:</Col>
+                <Col sm={4} className="fw-bold">Price:</Col>
                 <Col sm={8} className="text-success fw-bold fs-5">
-                  {selectedService.base_price?.toLocaleString('th-TH')} บาท
+                  ฿{selectedService.base_price?.toLocaleString()}
                 </Col>
               </Row>
             </ListGroup.Item>
           </ListGroup>
 
           <Alert variant="info" className="mt-3 mb-0">
-            <strong>หมายเหตุ:</strong> ราคาสุดท้ายจะคำนวณตามโปรโมชั่นที่มีอยู่ในขณะนั้น
-            และจะแสดงในอีเมลยืนยันการจองที่จะส่งให้ท่าน
+            <strong>Note:</strong> Final price will be calculated based on available promotions
+            and will be shown in the confirmation email sent to you.
           </Alert>
         </Card.Body>
       </Card>
 
       <div className="mt-4 d-flex justify-content-between">
         <Button variant="secondary" onClick={handleBack} disabled={loading}>
-          ← ย้อนกลับ
+          ← Back
         </Button>
         <Button
           variant="success"
@@ -134,10 +134,10 @@ export const BookingConfirm = () => {
           {loading ? (
             <>
               <span className="spinner-border spinner-border-sm me-2" />
-              กำลังดำเนินการ...
+              Processing...
             </>
           ) : (
-            'ยืนยันการจอง'
+            'Confirm Booking'
           )}
         </Button>
       </div>
@@ -145,7 +145,7 @@ export const BookingConfirm = () => {
       {/* Success Modal */}
       <Modal show={showModal} onHide={handleModalClose} centered>
         <Modal.Header closeButton className="bg-success text-white">
-          <Modal.Title>จองบริการสำเร็จ!</Modal.Title>
+          <Modal.Title>Booking Successful!</Modal.Title>
         </Modal.Header>
         <Modal.Body className="text-center py-4">
           <div className="mb-3">
@@ -160,16 +160,16 @@ export const BookingConfirm = () => {
               <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
             </svg>
           </div>
-          <h5>การจองของท่านสำเร็จแล้ว</h5>
+          <h5>Your booking has been confirmed</h5>
           <p className="text-muted mb-0">
-            ระบบได้ส่งอีเมลยืนยันการจองไปยังอีเมลของท่านแล้ว
+            A confirmation email has been sent to your email address
             <br />
-            โปรดตรวจสอบอีเมลเพื่อดูรายละเอียดการจอง
+            Please check your email for booking details
           </p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={handleModalClose}>
-            กลับหน้าหลัก
+            Back to Home
           </Button>
         </Modal.Footer>
       </Modal>

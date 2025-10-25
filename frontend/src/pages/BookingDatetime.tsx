@@ -44,7 +44,7 @@ export const BookingDatetime = () => {
       });
       setSlots(response.data.slots);
     } catch {
-      setError('ไม่สามารถโหลดข้อมูลเวลาว่างได้');
+      setError('Unable to load available time slots');
     } finally {
       setLoading(false);
     }
@@ -73,21 +73,21 @@ export const BookingDatetime = () => {
   return (
     <Container className="my-5">
       <div className="mb-4">
-        <h2>จองบริการ - ขั้นตอนที่ 3/3</h2>
-        <p className="text-muted">เลือกวันและเวลา</p>
+        <h2>Book Service - Step 3/3</h2>
+        <p className="text-muted">Select Date and Time</p>
       </div>
 
       <Row className="mb-4">
         <Col md={6}>
           <Alert variant="info">
-            <strong>บริการ:</strong> {selectedService?.name}<br />
-            <strong>พนักงาน:</strong> {selectedTherapist?.name}<br />
-            <strong>ระยะเวลา:</strong> {selectedService?.duration_minutes} นาที
+            <strong>Service:</strong> {selectedService?.name}<br />
+            <strong>Therapist:</strong> {selectedTherapist?.name}<br />
+            <strong>Duration:</strong> {selectedService?.duration_minutes} mins
           </Alert>
         </Col>
         <Col md={6}>
           <Form.Group>
-            <Form.Label>เลือกวันที่</Form.Label>
+            <Form.Label>Select Date</Form.Label>
             <Form.Control
               type="date"
               value={selectedDate}
@@ -96,7 +96,7 @@ export const BookingDatetime = () => {
               max={maxDate.toISOString().split('T')[0]}
             />
             <Form.Text className="text-muted">
-              สามารถจองล่วงหน้าได้ 1-30 วัน
+              You can book 1-30 days in advance
             </Form.Text>
           </Form.Group>
         </Col>
@@ -107,7 +107,7 @@ export const BookingDatetime = () => {
       {loading ? (
         <div className="text-center py-5">
           <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">กำลังโหลด...</span>
+            <span className="visually-hidden">Loading...</span>
           </div>
         </div>
       ) : (
@@ -120,13 +120,13 @@ export const BookingDatetime = () => {
             />
           ) : (
             <Alert variant="warning">
-              ไม่มีช่วงเวลาว่างในวันที่เลือก กรุณาเลือกวันอื่น
+              No available time slots for the selected date. Please choose another date
             </Alert>
           )}
 
           <div className="mt-4">
             <Button variant="secondary" onClick={handleBack}>
-              ← ย้อนกลับ
+              ← Back
             </Button>
           </div>
         </>

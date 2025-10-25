@@ -26,7 +26,7 @@ export const BookingService = () => {
         const response = await servicesAPI.getAll();
         setServices(response.data.services);
       } catch {
-        setError('ไม่สามารถโหลดข้อมูลบริการได้');
+        setError('Unable to load services');
       } finally {
         setLoading(false);
       }
@@ -43,8 +43,8 @@ export const BookingService = () => {
   return (
     <Container className="my-5">
       <div className="mb-4">
-        <h2>จองบริการ - ขั้นตอนที่ 1/3</h2>
-        <p className="text-muted">เลือกบริการที่ต้องการ</p>
+        <h2>Book Service - Step 1/3</h2>
+        <p className="text-muted">Choose your desired service</p>
       </div>
 
       {error && <Alert variant="danger">{error}</Alert>}
@@ -52,7 +52,7 @@ export const BookingService = () => {
       {loading ? (
         <div className="text-center py-5">
           <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">กำลังโหลด...</span>
+            <span className="visually-hidden">Loading...</span>
           </div>
         </div>
       ) : (
@@ -78,7 +78,7 @@ export const BookingService = () => {
                   <Card.Text className="flex-grow-1">{service.description}</Card.Text>
                   <div className="mb-3">
                     <div className="d-flex justify-content-between">
-                      <span>⏱ {service.duration_minutes} นาที</span>
+                      <span>⏱ {service.duration_minutes} mins</span>
                       <span className="text-primary fw-bold">
                         ฿{service.base_price.toLocaleString()}
                       </span>
@@ -89,7 +89,7 @@ export const BookingService = () => {
                     className="w-100"
                     onClick={() => handleSelectService(service)}
                   >
-                    เลือกบริการนี้
+                    Select This Service
                   </Button>
                 </Card.Body>
               </Card>
