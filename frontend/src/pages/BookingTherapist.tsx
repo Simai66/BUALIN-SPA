@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { therapistsAPI } from '../api/client';
 import { useBookingStore } from '../store';
+import { StepProgress } from '../components/StepProgress';
 
 interface Therapist {
   id: number;
@@ -44,21 +45,37 @@ export const BookingTherapist = () => {
     navigate('/booking/datetime');
   };
 
+  const handleAutoAssign = () => {
+    if (!therapists || therapists.length === 0) {
+      setError('ยังไม่มีพนักงานพร้อมให้บริการในขณะนี้');
+      return;
+    }
+    const activeList = therapists.filter((t) => (t as any).is_active !== false);
+    const selected = activeList[0] || therapists[0];
+    setTherapist(selected);
+    navigate('/booking/datetime');
+  };
+
   const handleBack = () => {
     navigate('/booking/service');
   };
 
   return (
     <Container className="my-5">
-      <div className="mb-4">
-        <h2>Book Service - Step 2/3</h2>
-        <p className="text-muted">Select Your Therapist</p>
+      <div className="mb-3">
+        <h2 className="section-title">เลือกพนักงาน</h2>
+        <StepProgress current={2} />
         {selectedService && (
-          <Alert variant="info">
-            Selected Service: <strong>{selectedService.name}</strong> (
-            {selectedService.duration_minutes} mins)
+          <Alert variant="light" className="alert-brand">
+            บริการที่เลือก: <strong>{selectedService.name}</strong> (
+            {selectedService.duration_minutes} นาที)
           </Alert>
         )}
+        <div className="d-flex gap-2">
+          <Button variant="primary" onClick={handleAutoAssign}>
+            เลือกให้อัตโนมัติ (เร็วที่สุด)
+          </Button>
+        </div>
       </div>
 
       {error && <Alert variant="danger">{error}</Alert>}
@@ -75,19 +92,7 @@ export const BookingTherapist = () => {
             {therapists.map((therapist) => (
               <Col md={6} lg={4} key={therapist.id} className="mb-4">
                 <Card className="h-100 shadow-sm">
-                  <div
-                    style={{
-                      height: '150px',
-                      background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'white',
-                      fontSize: '4rem',
-                    }}
-                  >
-                    👩‍⚕️
-                  </div>
+                  <div className="brand-gradient card-visual" aria-hidden>👩‍⚕️</div>
                   <Card.Body className="d-flex flex-column">
                     <Card.Title>{therapist.name}</Card.Title>
                     <Card.Subtitle className="mb-2 text-muted">
@@ -99,7 +104,7 @@ export const BookingTherapist = () => {
                       className="w-100"
                       onClick={() => handleSelectTherapist(therapist)}
                     >
-                      Select This Therapist
+                      เลือกพนักงานนี้
                     </Button>
                   </Card.Body>
                 </Card>

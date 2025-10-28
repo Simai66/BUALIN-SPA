@@ -371,6 +371,53 @@ p {
     transform: translateY(-2px);
 }
 
+/* Action Button (Terra) — matches reference, accessible states */
+.btn-action-terra {
+  background-color: #C57B57; /* base terracotta */
+  color: #FFFFFF; /* text white 100% */
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  padding: 12px 24px;
+  margin: 8px;
+  min-height: 40px;
+  min-width: 120px;
+  border-radius: 6px;
+  border: 1px solid #8D5138; /* subtle darker border */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.btn-action-terra:hover {
+  background-color: #B36F4F; /* 10% darker */
+  transform: scale(1.02);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-action-terra:active {
+  background-color: #A66347; /* 20% darker */
+  transform: scale(0.98);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.btn-action-terra:focus-visible {
+  outline: 3px solid rgba(197, 123, 87, 0.45); /* focus ring for accessibility */
+  outline-offset: 2px;
+}
+
+.btn-action-terra:disabled,
+.btn-action-terra[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+  box-shadow: none;
+}
+
 /* ===================================
    Forms
    =================================== */
@@ -634,4 +681,185 @@ p {
     .footer-contact {
         text-align: center;
     }
+}
+
+/* ===================================
+   Booking Flow Enhancements
+   =================================== */
+
+.booking-steps {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.booking-step {
+    display: flex;
+    align-items: center;
+    position: relative;
+    color: var(--text-light);
+}
+
+.booking-step .step-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-color);
+    background: var(--white);
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-right: 0.6rem;
+}
+
+.booking-step .step-label {
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.booking-step.is-current .step-circle {
+    border-color: var(--primary-color);
+    background: var(--accent-color);
+    color: var(--primary-dark);
+}
+
+.booking-step.is-current .step-label {
+    color: var(--primary-color);
+}
+
+.booking-step.is-complete .step-circle {
+    background: var(--primary-color);
+    border-color: var(--primary-dark);
+    color: var(--white);
+}
+
+.booking-step.is-complete .step-label {
+    color: var(--secondary-color);
+}
+
+.booking-step::after {
+    content: '';
+    width: 40px;
+    height: 2px;
+    background: var(--accent-color);
+    display: inline-block;
+    margin-left: 0.8rem;
+}
+
+.booking-step:last-child::after {
+    display: none;
+}
+
+.brand-gradient {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: var(--white);
+}
+
+.card-visual {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+
+/* Brand Alert (replace Bootstrap info tone with brand tone) */
+.alert-brand {
+    background-color: var(--accent-color) !important;
+    border: 1px solid var(--primary-light) !important;
+    color: var(--text-dark) !important;
+    border-radius: 12px;
+}
+.alert-brand strong {
+    color: var(--primary-dark);
+}
+
+/* Slot Cards */
+.slot-card {
+    transition: var(--transition);
+    border-radius: 12px;
+}
+.slot-card.available {
+    border: 2px solid var(--primary-light);
+    background: var(--white);
+}
+.slot-card.available:hover {
+    box-shadow: 0 10px 25px rgba(197, 123, 87, 0.15);
+    transform: translateY(-2px);
+}
+.slot-card.unavailable {
+    border: 2px dashed #d9d9d9;
+    background: #f7f7f7;
+    opacity: 0.7;
+}
+.slot-time { font-size: 1.1rem; }
+.slot-time-sub { color: var(--text-light); }
+.status-badge {
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.status-badge.available {
+    background: var(--accent-color);
+    color: var(--primary-dark);
+    border: 1px solid var(--primary-light);
+}
+.status-badge.unavailable {
+    background: #e5e5e5;
+    color: #777;
+    border: 1px solid #d4d4d4;
+}
+
+/* Booking History - Soft card and brand badges */
+.card-soft {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+}
+
+.card-divider {
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.badge-amber {
+    background-color: #FDE68A; /* amber 200 */
+    color: #78350F; /* amber 900 */
+}
+
+.badge-olive {
+    background-color: #E9F5D0; /* olive-ish light */
+    color: #3F6212; /* olive/dark lime */
+}
+
+.badge-slate {
+    background-color: #E5E7EB; /* gray 200 */
+    color: #374151; /* gray 700 */
+}
+
+.badge-brick {
+    background-color: #FAD3CF; /* soft brick */
+    color: #7A2E1D; /* brick text */
+}
+
+/* Terra badges to match reference screenshot exactly */
+.badge-terra {
+  background-color: #C57B57; /* terracotta */
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  display: inline-block;
+}
+
+.badge-terra-green { 
+  color: #2F6A32; /* deep green */
+}
+
+.badge-terra-brown { 
+  color: #7A2E1D; /* deep brown */
 }

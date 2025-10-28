@@ -54,13 +54,31 @@ export const getBookings = async (req: AuthRequest, res: Response) => {
 
 export const createBooking = async (req: AuthRequest, res: Response) => {
   try {
-    const { service_id, therapist_id, booking_datetime, promotion_id } = req.body;
+    const { service_id, therapist_id, booking_datetime, promotion_id, customer_phone, customer_name } = req.body;
 
-    // Get user info
-    const user = await db('users').where('id', req.user?.id).first();
-    if (!user) {
-      return res.status(404).json({ message: 'ไม่พบผู้ใช้' });
+    // Resolve customer info
+    let customerName = customer_name && String(customer_name).trim().length > 0 ? String(customer_name).trim() : undefined;
+    const phone = String(customer_phone || '').trim();
+    if (!phone) {
+      return res.status(400).json({ message: 'กรุณากรอกเบอร์โทร' });
     }
+
+    // If logged-in user exists, prefer their name/phone
+    let userEmail: string | null = null;
+    if (req.user?.id) {
+      const user = await db('users').where('id', req.user.id).first();
+      if (user) {
+        customerName = user.full_name || customerName;
+        // Prefer body phone if provided, else use user's phone
+        const effectivePhone = phone || user.phone;
+        if (!effectivePhone) {
+          return res.status(400).json({ message: 'กรุณากรอกเบอร์โทร' });
+        }
+        userEmail = user.email || null;
+      }
+    }
+    // Fallback name
+    if (!customerName) customerName = 'ลูกค้า';
 
     // Validate service
     const service = await db('services').where('id', service_id).first();
@@ -92,8 +110,8 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
 
     // Create booking
     const [bookingId] = await db('bookings').insert({
-      customer_name: user.full_name,
-      customer_phone: user.phone,
+      customer_name: customerName,
+      customer_phone: phone,
       service_id,
       therapist_id,
       booking_datetime: bookingDate,
@@ -104,15 +122,17 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
 
     // Send email notification
     try {
-      await sendBookingEmail('new', {
-        customerName: user.full_name,
-        customerEmail: user.email,
-        serviceName: service.name,
-        therapistName: therapist.name,
-        bookingDatetime: formatThaiDateTime(bookingDate),
-        price,
-        status: 'pending',
-      });
+      if (userEmail) {
+        await sendBookingEmail('new', {
+          customerName: customerName,
+          customerEmail: userEmail,
+          serviceName: service.name,
+          therapistName: therapist.name,
+          bookingDatetime: formatThaiDateTime(bookingDate),
+          price,
+          status: 'pending',
+        });
+      }
     } catch (emailError) {
       console.error('Failed to send booking email:', emailError);
     }
@@ -121,6 +141,7 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
       message: 'จองสำเร็จ',
       bookingId,
       price,
+      reference: `BK-${new Date().toISOString().slice(2,10).replace(/-/g,'')}-${bookingId}`,
     });
   } catch (error) {
     console.error('Create booking error:', error);
@@ -198,6 +219,38 @@ export const getTimeSlots = async (req: Request, res: Response) => {
     res.json({ slots });
   } catch (error) {
     console.error('Get time slots error:', error);
+    res.status(500).json({ message: 'เกิดข้อผิดพลาด' });
+  }
+};
+
+// Public: lookup bookings by phone (no auth required)
+export const lookupBookingsByPhone = async (req: Request, res: Response) => {
+  try {
+    const { phone } = req.query;
+    const normalized = String(phone || '').trim();
+    if (!normalized) {
+      return res.status(400).json({ message: 'กรุณากรอกเบอร์โทร' });
+    }
+
+    const bookings = await db('bookings')
+      .select(
+        'bookings.id',
+        'bookings.customer_name',
+        'bookings.customer_phone',
+        'bookings.booking_datetime',
+        'bookings.status',
+        'bookings.price_at_booking',
+        'services.name as service_name',
+        'therapists.name as therapist_name'
+      )
+      .join('services', 'bookings.service_id', 'services.id')
+      .join('therapists', 'bookings.therapist_id', 'therapists.id')
+      .where('bookings.customer_phone', normalized)
+      .orderBy('booking_datetime', 'desc');
+
+    res.json({ bookings });
+  } catch (error) {
+    console.error('Lookup bookings by phone error:', error);
     res.status(500).json({ message: 'เกิดข้อผิดพลาด' });
   }
 };

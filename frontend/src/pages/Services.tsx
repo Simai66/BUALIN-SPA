@@ -51,11 +51,8 @@ export const Services = () => {
   }, []);
 
   const handleBookNow = () => {
-    if (!isAuthenticated) {
-      navigate('/login');
-    } else {
-      navigate('/booking/service');
-    }
+    // ไม่บังคับล็อกอิน: ไปหน้าเลือกบริการได้ทันที
+    navigate('/booking/service');
   };
 
   return (

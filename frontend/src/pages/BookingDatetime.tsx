@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { bookingsAPI } from '../api/client';
 import { useBookingStore } from '../store';
 import { TimeBlockGrid } from '../components/TimeBlockGrid';
+import { StepProgress } from '../components/StepProgress';
 
 interface TimeSlot {
   start: string;
@@ -18,6 +19,7 @@ export const BookingDatetime = () => {
   const [slots, setSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [hourlyOnly, setHourlyOnly] = useState(true);
 
   useEffect(() => {
     if (!selectedService || !selectedTherapist) {
@@ -65,6 +67,14 @@ export const BookingDatetime = () => {
     navigate('/booking/therapist');
   };
 
+  const handleSelectEarliest = () => {
+    if (!slots || slots.length === 0) return;
+    const earliest = slots.find((s) => s.available) || slots[0];
+    if (earliest) {
+      handleSelectSlot(earliest);
+    }
+  };
+
   const minDate = new Date();
   minDate.setDate(minDate.getDate() + 1);
   const maxDate = new Date();
@@ -72,22 +82,22 @@ export const BookingDatetime = () => {
 
   return (
     <Container className="my-5">
-      <div className="mb-4">
-        <h2>Book Service - Step 3/3</h2>
-        <p className="text-muted">Select Date and Time</p>
+      <div className="mb-3">
+        <h2 className="section-title">วันและเวลา</h2>
+        <StepProgress current={3} />
       </div>
 
       <Row className="mb-4">
         <Col md={6}>
-          <Alert variant="info">
-            <strong>Service:</strong> {selectedService?.name}<br />
-            <strong>Therapist:</strong> {selectedTherapist?.name}<br />
-            <strong>Duration:</strong> {selectedService?.duration_minutes} mins
+          <Alert variant="light" className="alert-brand">
+            <strong>บริการ:</strong> {selectedService?.name}<br />
+            <strong>พนักงาน:</strong> {selectedTherapist?.name}<br />
+            <strong>ระยะเวลา:</strong> {selectedService?.duration_minutes} นาที
           </Alert>
         </Col>
         <Col md={6}>
           <Form.Group>
-            <Form.Label>Select Date</Form.Label>
+            <Form.Label>เลือกวันที่</Form.Label>
             <Form.Control
               type="date"
               value={selectedDate}
@@ -99,6 +109,19 @@ export const BookingDatetime = () => {
               You can book 1-30 days in advance
             </Form.Text>
           </Form.Group>
+          <Form.Check
+            type="switch"
+            id="hourly-only-switch"
+            className="mt-3"
+            label="แสดงเฉพาะรายชั่วโมง"
+            checked={hourlyOnly}
+            onChange={(e) => setHourlyOnly(e.target.checked)}
+          />
+          <div className="mt-3 d-flex">
+            <Button variant="primary" onClick={handleSelectEarliest} disabled={loading || slots.length === 0}>
+              เลือกเวลาที่เร็วที่สุด
+            </Button>
+          </div>
         </Col>
       </Row>
 
@@ -117,6 +140,7 @@ export const BookingDatetime = () => {
               slots={slots}
               onSelectSlot={handleSelectSlot}
               durationMinutes={selectedService?.duration_minutes || 60}
+              hourlyOnly={hourlyOnly}
             />
           ) : (
             <Alert variant="warning">

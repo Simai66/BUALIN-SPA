@@ -43,6 +43,9 @@ export const Footer = () => {
                 <Link to="/services">Our Services</Link>
               </li>
               <li>
+                <Link to="/booking/history">Booking History</Link>
+              </li>
+              <li>
                 <Link to="/login">Login</Link>
               </li>
               <li>

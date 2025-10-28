@@ -13,6 +13,7 @@ import { BookingService } from './pages/BookingService';
 import { BookingTherapist } from './pages/BookingTherapist';
 import { BookingDatetime } from './pages/BookingDatetime';
 import { BookingConfirm } from './pages/BookingConfirm';
+import BookingHistory from './pages/BookingHistory';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/footer';
@@ -56,39 +57,12 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/services" element={<Services />} />
         
-        {/* Protected booking routes */}
-        <Route
-          path="/booking/service"
-          element={
-            <ProtectedRoute>
-              <BookingService />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/booking/therapist"
-          element={
-            <ProtectedRoute>
-              <BookingTherapist />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/booking/datetime"
-          element={
-            <ProtectedRoute>
-              <BookingDatetime />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/booking/confirm"
-          element={
-            <ProtectedRoute>
-              <BookingConfirm />
-            </ProtectedRoute>
-          }
-        />
+        {/* Public booking routes (no login required) */}
+        <Route path="/booking/service" element={<BookingService />} />
+        <Route path="/booking/therapist" element={<BookingTherapist />} />
+        <Route path="/booking/datetime" element={<BookingDatetime />} />
+        <Route path="/booking/confirm" element={<BookingConfirm />} />
+        <Route path="/booking/history" element={<BookingHistory />} />
         
         {/* Admin route */}
         <Route

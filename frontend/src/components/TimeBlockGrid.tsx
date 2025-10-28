@@ -9,42 +9,38 @@ interface TimeSlot {
 interface TimeBlockGridProps {
   slots: TimeSlot[];
   onSelectSlot: (slot: TimeSlot) => void;
-  durationMinutes: number;
+  durationMinutes?: number;
+  hourlyOnly?: boolean;
 }
 
-export const TimeBlockGrid = ({ slots, onSelectSlot }: TimeBlockGridProps) => {
+export const TimeBlockGrid = ({ slots, onSelectSlot, hourlyOnly = false }: TimeBlockGridProps) => {
   const formatTime = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
   };
 
+  const displaySlots = hourlyOnly
+    ? slots.filter((s) => new Date(s.start).getMinutes() === 0)
+    : slots;
+
   return (
     <div>
       <h5 className="mb-3">เลือกช่วงเวลา</h5>
       <div className="row g-3">
-        {slots.map((slot, index) => (
+        {displaySlots.map((slot, index) => (
           <div key={index} className="col-6 col-md-4 col-lg-3">
             <Card
-              className={`text-center h-100 ${
-                slot.available
-                  ? 'border-success bg-light cursor-pointer hover-shadow'
-                  : 'border-secondary bg-secondary text-white'
-              }`}
-              style={{
-                cursor: slot.available ? 'pointer' : 'not-allowed',
-                opacity: slot.available ? 1 : 0.5,
-                transition: 'all 0.2s',
-              }}
+              className={`text-center h-100 slot-card ${slot.available ? 'available' : 'unavailable'}`}
               onClick={() => slot.available && onSelectSlot(slot)}
             >
               <Card.Body>
-                <div className="fw-bold">{formatTime(slot.start)}</div>
-                <div className="small">- {formatTime(slot.end)}</div>
-                <div className="mt-2 small">
+                <div className="slot-time fw-bold">{formatTime(slot.start)}</div>
+                <div className="slot-time-sub small">- {formatTime(slot.end)}</div>
+                <div className="mt-3">
                   {slot.available ? (
-                    <span className="badge bg-success">ว่าง</span>
+                    <span className="status-badge available">ว่าง</span>
                   ) : (
-                    <span className="badge bg-secondary">ไม่ว่าง</span>
+                    <span className="status-badge unavailable">ไม่ว่าง</span>
                   )}
                 </div>
               </Card.Body>
@@ -53,13 +49,8 @@ export const TimeBlockGrid = ({ slots, onSelectSlot }: TimeBlockGridProps) => {
         ))}
       </div>
       <style>{`
-        .hover-shadow:hover {
-          box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
-          transform: translateY(-2px);
-        }
-        .cursor-pointer {
-          cursor: pointer;
-        }
+        .slot-card { cursor: pointer; }
+        .slot-card.unavailable { cursor: not-allowed; }
       `}</style>
     </div>
   );

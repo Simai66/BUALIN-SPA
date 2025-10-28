@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { servicesAPI } from '../api/client';
 import { useBookingStore } from '../store';
+import { StepProgress } from '../components/StepProgress';
 
 interface Service {
   id: number;
@@ -42,9 +43,9 @@ export const BookingService = () => {
 
   return (
     <Container className="my-5">
-      <div className="mb-4">
-        <h2>Book Service - Step 1/3</h2>
-        <p className="text-muted">Choose your desired service</p>
+      <div className="mb-3">
+        <h2 className="section-title">จองบริการ</h2>
+        <StepProgress current={1} />
       </div>
 
       {error && <Alert variant="danger">{error}</Alert>}
@@ -60,19 +61,7 @@ export const BookingService = () => {
           {services.map((service) => (
             <Col md={6} lg={4} key={service.id} className="mb-4">
               <Card className="h-100 shadow-sm hover-card">
-                <div
-                  style={{
-                    height: '180px',
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'white',
-                    fontSize: '3.5rem',
-                  }}
-                >
-                  💆
-                </div>
+                <div className="brand-gradient card-visual" aria-hidden>💆</div>
                 <Card.Body className="d-flex flex-column">
                   <Card.Title>{service.name}</Card.Title>
                   <Card.Text className="flex-grow-1">{service.description}</Card.Text>
@@ -89,7 +78,7 @@ export const BookingService = () => {
                     className="w-100"
                     onClick={() => handleSelectService(service)}
                   >
-                    Select This Service
+                    เลือกบริการนี้
                   </Button>
                 </Card.Body>
               </Card>

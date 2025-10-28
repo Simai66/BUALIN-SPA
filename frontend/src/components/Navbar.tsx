@@ -28,12 +28,13 @@ export const Navbar = () => {
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
             <Nav.Link as={Link} to="/services">Services</Nav.Link>
+            <Nav.Link as={Link} to="/booking/history">Booking History</Nav.Link>
             {isAuthenticated && user?.role === 'admin' && (
               <Nav.Link as={Link} to="/admin">Dashboard</Nav.Link>
             )}
           </Nav>
           <Nav className="align-items-center">
-            {isAuthenticated ? (
+            {isAuthenticated && user?.role === 'admin' ? (
               <>
                 <span className="nav-link" style={{ cursor: 'default' }}>
                   Hello, {user?.full_name}
@@ -47,16 +48,7 @@ export const Navbar = () => {
                   Logout
                 </Button>
               </>
-            ) : (
-              <>
-                <Nav.Link as={Link} to="/login">Login</Nav.Link>
-                <Link to="/register" style={{ marginLeft: '1rem', textDecoration: 'none' }}>
-                  <Button variant="primary" size="sm">
-                    Sign Up
-                  </Button>
-                </Link>
-              </>
-            )}
+            ) : null}
           </Nav>
         </BSNavbar.Collapse>
       </Container>

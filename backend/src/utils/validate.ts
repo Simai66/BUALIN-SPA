@@ -46,6 +46,9 @@ export const bookingSchema = z.object({
   therapist_id: z.number().int().positive(),
   booking_datetime: z.string().datetime(),
   promotion_id: z.number().int().positive().optional(),
+  customer_phone: z.string().regex(/^\d{10}$/,
+    'กรุณากรอกเบอร์โทรเป็นตัวเลข 10 หลัก'),
+  customer_name: z.string().min(2).optional(),
 });
 
 export const updateBookingStatusSchema = z.object({

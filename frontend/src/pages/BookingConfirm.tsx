@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Card, Row, Col, Button, Alert, ListGroup, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { bookingsAPI } from '../api/client';
 import { useBookingStore } from '../store';
+import { StepProgress } from '../components/StepProgress';
 
 export const BookingConfirm = () => {
   const navigate = useNavigate();
@@ -10,9 +11,17 @@ export const BookingConfirm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
-
-  if (!selectedService || !selectedTherapist || !selectedDatetime) {
-    navigate('/booking/service');
+  const [phone, setPhone] = useState('');
+  const [name, setName] = useState('');
+  const [reference, setReference] = useState<string | null>(null);
+  // Avoid navigating during render; redirect via effect if prerequisites missing
+  const missingPrereq = !selectedService || !selectedTherapist || !selectedDatetime;
+  useEffect(() => {
+    if (missingPrereq) {
+      navigate('/booking/service', { replace: true });
+    }
+  }, [missingPrereq, navigate]);
+  if (missingPrereq) {
     return null;
   }
 
@@ -27,15 +36,21 @@ export const BookingConfirm = () => {
     });
   };
 
+  const sanitizePhone = (value: string) => value.replace(/[^0-9]/g, '').slice(0, 10);
+  const isPhoneValid = phone.trim().length === 10 && /^\d{10}$/.test(phone.trim());
+
   const handleConfirm = async () => {
     setLoading(true);
     setError('');
     try {
-      await bookingsAPI.create({
+      const response = await bookingsAPI.create({
         service_id: selectedService.id,
         therapist_id: selectedTherapist.id,
         booking_datetime: selectedDatetime.toISOString(),
+        customer_phone: phone.trim(),
+        customer_name: name.trim() || undefined,
       });
+      setReference(response.data?.reference || `BK-${response.data?.bookingId ?? ''}`);
       setShowModal(true);
     } catch (err: unknown) {
       if (err && typeof err === 'object' && 'response' in err) {
@@ -61,56 +76,90 @@ export const BookingConfirm = () => {
 
   return (
     <Container className="my-5">
-      <div className="mb-4">
-        <h2>Confirm Booking</h2>
-        <p className="text-muted">Please review the information before confirming your booking</p>
+      <div className="mb-3">
+        <h2 className="section-title">ยืนยันการจอง</h2>
+        <StepProgress current={4} />
+        <p className="text-muted">กรุณาตรวจสอบข้อมูลก่อนยืนยันการจอง</p>
       </div>
 
       {error && <Alert variant="danger">{error}</Alert>}
 
       <Card className="shadow-sm">
         <Card.Header className="bg-primary text-white">
-          <h5 className="mb-0">Booking Details</h5>
+          <h5 className="mb-0">รายละเอียดการจอง</h5>
         </Card.Header>
         <Card.Body>
           <ListGroup variant="flush">
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">Service:</Col>
+                <Col sm={4} className="fw-bold">บริการ:</Col>
                 <Col sm={8}>{selectedService.name}</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">Description:</Col>
+                <Col sm={4} className="fw-bold">รายละเอียด:</Col>
                 <Col sm={8}>{selectedService.description}</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">Duration:</Col>
-                <Col sm={8}>{selectedService.duration_minutes} mins</Col>
+                <Col sm={4} className="fw-bold">ระยะเวลา:</Col>
+                <Col sm={8}>{selectedService.duration_minutes} นาที</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">Therapist:</Col>
+                <Col sm={4} className="fw-bold">พนักงาน:</Col>
                 <Col sm={8}>{selectedTherapist.name}</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">Date & Time:</Col>
+                <Col sm={4} className="fw-bold">วันเวลา:</Col>
                 <Col sm={8}>{formatDateTime(selectedDatetime)}</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">Price:</Col>
+                <Col sm={4} className="fw-bold">ราคา:</Col>
                 <Col sm={8} className="text-success fw-bold fs-5">
                   ฿{selectedService.base_price?.toLocaleString()}
                 </Col>
               </Row>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Row>
+                <Col sm={4} className="fw-bold">เบอร์โทรสำหรับติดต่อ:</Col>
+                <Col sm={8}>
+                  <input
+                    type="tel"
+                    className="form-control"
+                    value={phone}
+                    onChange={(e) => setPhone(sanitizePhone(e.target.value))}
+                    placeholder="เช่น 08XXXXXXXX"
+                  />
+                  {!isPhoneValid && phone.length > 0 && (
+                    <small className="text-danger">กรุณากรอกเบอร์โทรเป็นตัวเลข 10 หลัก</small>
+                  )}
+                </Col>
+              </Row>
+              <small className="text-muted">ใช้เบอร์โทรเพื่อยืนยันการจอง โดยไม่ต้องล็อกอิน</small>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Row>
+                <Col sm={4} className="fw-bold">ชื่อลูกค้า (ไม่บังคับ):</Col>
+                <Col sm={8}>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="เช่น สมชาย ใจดี"
+                  />
+                </Col>
+              </Row>
+              <small className="text-muted">หากเว้นไว้ ระบบจะใช้ “ลูกค้า” เป็นชื่อ</small>
             </ListGroup.Item>
           </ListGroup>
 
@@ -128,7 +177,7 @@ export const BookingConfirm = () => {
         <Button
           variant="success"
           onClick={handleConfirm}
-          disabled={loading}
+          disabled={loading || phone.trim().length < 8}
           size="lg"
         >
           {loading ? (
@@ -166,10 +215,15 @@ export const BookingConfirm = () => {
             <br />
             Please check your email for booking details
           </p>
+          {reference && (
+            <div className="mt-3">
+              <strong>Booking Reference:</strong> <code>{reference}</code>
+            </div>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={handleModalClose}>
-            Back to Home
+            กลับหน้าแรก
           </Button>
         </Modal.Footer>
       </Modal>
