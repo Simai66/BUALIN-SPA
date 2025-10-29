@@ -33,7 +33,7 @@ export const Login = () => {
       navigate('/');
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
-      setError(error.response?.data?.message || 'เกิดข้อผิดพลาด');
+  setError(error.response?.data?.message || 'An error occurred');
     } finally {
       setLoading(false);
     }

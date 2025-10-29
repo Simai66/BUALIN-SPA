@@ -25,7 +25,7 @@ export const TimeBlockGrid = ({ slots, onSelectSlot, hourlyOnly = false }: TimeB
 
   return (
     <div>
-      <h5 className="mb-3">เลือกช่วงเวลา</h5>
+  <h5 className="mb-3">Select Time Range</h5>
       <div className="row g-3">
         {displaySlots.map((slot, index) => (
           <div key={index} className="col-6 col-md-4 col-lg-3">
@@ -38,9 +38,9 @@ export const TimeBlockGrid = ({ slots, onSelectSlot, hourlyOnly = false }: TimeB
                 <div className="slot-time-sub small">- {formatTime(slot.end)}</div>
                 <div className="mt-3">
                   {slot.available ? (
-                    <span className="status-badge available">ว่าง</span>
+  <span className="status-badge available">Available</span>
                   ) : (
-                    <span className="status-badge unavailable">ไม่ว่าง</span>
+  <span className="status-badge unavailable">Unavailable</span>
                   )}
                 </div>
               </Card.Body>

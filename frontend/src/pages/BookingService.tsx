@@ -44,7 +44,7 @@ export const BookingService = () => {
   return (
     <Container className="my-5">
       <div className="mb-3">
-        <h2 className="section-title">จองบริการ</h2>
+  <h2 className="section-title">Book Service</h2>
         <StepProgress current={1} />
       </div>
 
@@ -78,7 +78,7 @@ export const BookingService = () => {
                     className="w-100"
                     onClick={() => handleSelectService(service)}
                   >
-                    เลือกบริการนี้
+  Choose this service
                   </Button>
                 </Card.Body>
               </Card>

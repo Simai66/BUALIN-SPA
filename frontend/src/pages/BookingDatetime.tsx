@@ -83,21 +83,21 @@ export const BookingDatetime = () => {
   return (
     <Container className="my-5">
       <div className="mb-3">
-        <h2 className="section-title">วันและเวลา</h2>
+  <h2 className="section-title">Date &amp; Time</h2>
         <StepProgress current={3} />
       </div>
 
       <Row className="mb-4">
         <Col md={6}>
           <Alert variant="light" className="alert-brand">
-            <strong>บริการ:</strong> {selectedService?.name}<br />
-            <strong>พนักงาน:</strong> {selectedTherapist?.name}<br />
-            <strong>ระยะเวลา:</strong> {selectedService?.duration_minutes} นาที
+  <strong>Service:</strong> {selectedService?.name}<br />
+  <strong>Therapist:</strong> {selectedTherapist?.name}<br />
+  <strong>Duration:</strong> {selectedService?.duration_minutes} minutes
           </Alert>
         </Col>
         <Col md={6}>
           <Form.Group>
-            <Form.Label>เลือกวันที่</Form.Label>
+  <Form.Label>Choose a date</Form.Label>
             <Form.Control
               type="date"
               value={selectedDate}
@@ -113,13 +113,13 @@ export const BookingDatetime = () => {
             type="switch"
             id="hourly-only-switch"
             className="mt-3"
-            label="แสดงเฉพาะรายชั่วโมง"
+  label="Show hourly only"
             checked={hourlyOnly}
             onChange={(e) => setHourlyOnly(e.target.checked)}
           />
           <div className="mt-3 d-flex">
             <Button variant="primary" onClick={handleSelectEarliest} disabled={loading || slots.length === 0}>
-              เลือกเวลาที่เร็วที่สุด
+  Select the earliest time
             </Button>
           </div>
         </Col>

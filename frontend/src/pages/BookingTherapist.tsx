@@ -47,7 +47,7 @@ export const BookingTherapist = () => {
 
   const handleAutoAssign = () => {
     if (!therapists || therapists.length === 0) {
-      setError('ยังไม่มีพนักงานพร้อมให้บริการในขณะนี้');
+  setError('No therapists are available at the moment');
       return;
     }
     const activeList = therapists.filter((t) => (t as any).is_active !== false);
@@ -63,17 +63,17 @@ export const BookingTherapist = () => {
   return (
     <Container className="my-5">
       <div className="mb-3">
-        <h2 className="section-title">เลือกพนักงาน</h2>
+  <h2 className="section-title">Choose Therapist</h2>
         <StepProgress current={2} />
         {selectedService && (
           <Alert variant="light" className="alert-brand">
-            บริการที่เลือก: <strong>{selectedService.name}</strong> (
-            {selectedService.duration_minutes} นาที)
+  Selected Service: <strong>{selectedService.name}</strong> (
+  {selectedService.duration_minutes} minutes)
           </Alert>
         )}
         <div className="d-flex gap-2">
           <Button variant="primary" onClick={handleAutoAssign}>
-            เลือกให้อัตโนมัติ (เร็วที่สุด)
+  Auto-select (Earliest)
           </Button>
         </div>
       </div>
@@ -104,7 +104,7 @@ export const BookingTherapist = () => {
                       className="w-100"
                       onClick={() => handleSelectTherapist(therapist)}
                     >
-                      เลือกพนักงานนี้
+  Choose this therapist
                     </Button>
                   </Card.Body>
                 </Card>

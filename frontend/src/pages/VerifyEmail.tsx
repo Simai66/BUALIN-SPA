@@ -16,19 +16,19 @@ export const VerifyEmail = () => {
 
       if (!token || !email) {
         setStatus('error');
-        setMessage('ลิงก์ไม่ถูกต้อง');
+  setMessage('Invalid link');
         return;
       }
 
       try {
         const response = await authAPI.verifyEmail(token, email);
         setStatus('success');
-        setMessage(response.data.message || 'ยืนยันอีเมลสำเร็จ!');
+  setMessage(response.data.message || 'Email verified successfully!');
         setTimeout(() => navigate('/login'), 3000);
       } catch (error: unknown) {
         setStatus('error');
         const err = error as { response?: { data?: { message?: string } } };
-        setMessage(err.response?.data?.message || 'เกิดข้อผิดพลาดในการยืนยันอีเมล');
+  setMessage(err.response?.data?.message || 'An error occurred while verifying email');
       }
     };
 
@@ -42,19 +42,19 @@ export const VerifyEmail = () => {
           {status === 'loading' && (
             <div className="text-center">
               <Spinner animation="border" variant="primary" />
-              <p className="mt-3">กำลังยืนยันอีเมล...</p>
+  <p className="mt-3">Verifying email...</p>
             </div>
           )}
           {status === 'success' && (
             <Alert variant="success">
-              <Alert.Heading>✓ สำเร็จ!</Alert.Heading>
+  <Alert.Heading>✓ Success!</Alert.Heading>
               <p>{message}</p>
-              <p className="mb-0">กำลังนำคุณไปหน้าเข้าสู่ระบบ...</p>
+  <p className="mb-0">Redirecting you to the login page...</p>
             </Alert>
           )}
           {status === 'error' && (
             <Alert variant="danger">
-              <Alert.Heading>เกิดข้อผิดพลาด</Alert.Heading>
+  <Alert.Heading>Error</Alert.Heading>
               <p>{message}</p>
             </Alert>
           )}

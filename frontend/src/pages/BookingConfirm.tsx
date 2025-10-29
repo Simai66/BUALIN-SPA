@@ -77,52 +77,52 @@ export const BookingConfirm = () => {
   return (
     <Container className="my-5">
       <div className="mb-3">
-        <h2 className="section-title">ยืนยันการจอง</h2>
+  <h2 className="section-title">Confirm Booking</h2>
         <StepProgress current={4} />
-        <p className="text-muted">กรุณาตรวจสอบข้อมูลก่อนยืนยันการจอง</p>
+  <p className="text-muted">Please review the details before confirming your booking</p>
       </div>
 
       {error && <Alert variant="danger">{error}</Alert>}
 
       <Card className="shadow-sm">
         <Card.Header className="bg-primary text-white">
-          <h5 className="mb-0">รายละเอียดการจอง</h5>
+  <h5 className="mb-0">Booking Details</h5>
         </Card.Header>
         <Card.Body>
           <ListGroup variant="flush">
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">บริการ:</Col>
+  <Col sm={4} className="fw-bold">Service:</Col>
                 <Col sm={8}>{selectedService.name}</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">รายละเอียด:</Col>
+  <Col sm={4} className="fw-bold">Description:</Col>
                 <Col sm={8}>{selectedService.description}</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">ระยะเวลา:</Col>
-                <Col sm={8}>{selectedService.duration_minutes} นาที</Col>
+  <Col sm={4} className="fw-bold">Duration:</Col>
+  <Col sm={8}>{selectedService.duration_minutes} minutes</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">พนักงาน:</Col>
+  <Col sm={4} className="fw-bold">Therapist:</Col>
                 <Col sm={8}>{selectedTherapist.name}</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">วันเวลา:</Col>
+  <Col sm={4} className="fw-bold">Date &amp; Time:</Col>
                 <Col sm={8}>{formatDateTime(selectedDatetime)}</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">ราคา:</Col>
+  <Col sm={4} className="fw-bold">Price:</Col>
                 <Col sm={8} className="text-success fw-bold fs-5">
                   ฿{selectedService.base_price?.toLocaleString()}
                 </Col>
@@ -130,36 +130,36 @@ export const BookingConfirm = () => {
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">เบอร์โทรสำหรับติดต่อ:</Col>
+  <Col sm={4} className="fw-bold">Contact Phone:</Col>
                 <Col sm={8}>
                   <input
                     type="tel"
                     className="form-control"
                     value={phone}
                     onChange={(e) => setPhone(sanitizePhone(e.target.value))}
-                    placeholder="เช่น 08XXXXXXXX"
+  placeholder="e.g., 08XXXXXXXX"
                   />
                   {!isPhoneValid && phone.length > 0 && (
-                    <small className="text-danger">กรุณากรอกเบอร์โทรเป็นตัวเลข 10 หลัก</small>
+  <small className="text-danger">Please enter a 10-digit numeric phone number</small>
                   )}
                 </Col>
               </Row>
-              <small className="text-muted">ใช้เบอร์โทรเพื่อยืนยันการจอง โดยไม่ต้องล็อกอิน</small>
+  <small className="text-muted">Use your phone number to confirm without logging in</small>
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
-                <Col sm={4} className="fw-bold">ชื่อลูกค้า (ไม่บังคับ):</Col>
+  <Col sm={4} className="fw-bold">Customer Name (optional):</Col>
                 <Col sm={8}>
                   <input
                     type="text"
                     className="form-control"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="เช่น สมชาย ใจดี"
+  placeholder="e.g., Somchai Jaidee"
                   />
                 </Col>
               </Row>
-              <small className="text-muted">หากเว้นไว้ ระบบจะใช้ “ลูกค้า” เป็นชื่อ</small>
+  <small className="text-muted">If left blank, the system will use "Customer" as the name</small>
             </ListGroup.Item>
           </ListGroup>
 
@@ -223,7 +223,7 @@ export const BookingConfirm = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={handleModalClose}>
-            กลับหน้าแรก
+  Back to Home
           </Button>
         </Modal.Footer>
       </Modal>

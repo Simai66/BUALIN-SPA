@@ -6,7 +6,7 @@ interface StepProgressProps {
 }
 
 export const StepProgress: React.FC<StepProgressProps> = ({ current, labels }) => {
-  const steps = labels || ['เลือกบริการ', 'เลือกพนักงาน', 'วันและเวลา', 'ยืนยัน'];
+const steps = labels || ['Select Service', 'Select Therapist', 'Date & Time', 'Confirm'];
 
   return (
     <div className="booking-steps" aria-label="Booking steps">
