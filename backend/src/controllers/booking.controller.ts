@@ -4,6 +4,8 @@ import { AuthRequest } from '../middleware/auth';
 import { calculateBookingPrice } from '../utils/price';
 import { isTherapistAvailable, generateTimeSlots, formatThaiDateTime } from '../utils/time';
 import { sendBookingEmail } from '../config/mail';
+import { logEvent } from '../utils/logger';
+import { formatYMDLocal } from '../utils/date';
 
 export const getBookings = async (req: AuthRequest, res: Response) => {
   try {
@@ -93,6 +95,17 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
     }
 
     const bookingDate = new Date(booking_datetime);
+
+    // Enforce booking window: at least 1 day ahead, up to 14 days ahead
+    const startAllowed = new Date();
+    startAllowed.setDate(startAllowed.getDate() + 1);
+    startAllowed.setHours(0, 0, 0, 0);
+    const endAllowed = new Date();
+    endAllowed.setDate(endAllowed.getDate() + 14);
+    endAllowed.setHours(23, 59, 59, 999);
+    if (bookingDate < startAllowed || bookingDate > endAllowed) {
+      return res.status(400).json({ message: 'สามารถจองล่วงหน้าได้ไม่เกิน 14 วัน และต้องล่วงหน้าอย่างน้อย 1 วัน' });
+    }
     const endTime = new Date(bookingDate.getTime() + service.duration_minutes * 60000);
 
     // Check availability
@@ -120,6 +133,13 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
       promotion_id: promotion?.id || null,
     });
 
+    logEvent('info', 'booking_created', {
+      bookingId,
+      service_id,
+      therapist_id,
+      booking_datetime: bookingDate.toISOString(),
+    });
+
     // Send email notification
     try {
       if (userEmail) {
@@ -145,6 +165,7 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
     });
   } catch (error) {
     console.error('Create booking error:', error);
+    logEvent('error', 'booking_error', { error: String(error) });
     res.status(500).json({ message: 'เกิดข้อผิดพลาดในการจอง' });
   }
 };
@@ -209,6 +230,30 @@ export const getTimeSlots = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'ข้อมูลไม่ครบถ้วน' });
     }
 
+    // Validate service & therapist
+    const service = await db('services').where('id', Number(service_id)).first();
+    if (!service || !service.is_active) {
+      return res.status(400).json({ message: 'บริการไม่พร้อมใช้งาน' });
+    }
+    const therapist = await db('therapists').where('id', Number(therapist_id)).first();
+    if (!therapist || !therapist.is_active) {
+      return res.status(400).json({ message: 'พนักงานไม่พร้อมให้บริการ' });
+    }
+
+    // Enforce booking window for slot lookup
+    const targetDate = new Date(String(date));
+    const startAllowed = new Date();
+    startAllowed.setDate(startAllowed.getDate() + 1);
+    startAllowed.setHours(0, 0, 0, 0);
+    const endAllowed = new Date();
+    endAllowed.setDate(endAllowed.getDate() + 14);
+    endAllowed.setHours(23, 59, 59, 999);
+
+    if (targetDate < startAllowed || targetDate > endAllowed) {
+      logEvent('info', 'slots_out_of_window', { service_id, therapist_id, date });
+      return res.json({ slots: [] });
+    }
+
     const slots = await generateTimeSlots(
       Number(service_id),
       Number(therapist_id),
@@ -216,9 +261,58 @@ export const getTimeSlots = async (req: Request, res: Response) => {
       30 // 30 minute steps
     );
 
+    logEvent('info', 'slots_lookup', { service_id, therapist_id, date, slots: slots.length });
+
     res.json({ slots });
   } catch (error) {
     console.error('Get time slots error:', error);
+    logEvent('error', 'slots_error', { error: String(error) });
+    res.status(500).json({ message: 'เกิดข้อผิดพลาด' });
+  }
+};
+
+// List available dates within booking window with available slot counts
+export const getAvailableDates = async (req: Request, res: Response) => {
+  try {
+    const { service_id, therapist_id } = req.query;
+
+    if (!service_id || !therapist_id) {
+      return res.status(400).json({ message: 'ข้อมูลไม่ครบถ้วน' });
+    }
+
+    const startAllowed = new Date();
+    startAllowed.setDate(startAllowed.getDate() + 1);
+    startAllowed.setHours(0, 0, 0, 0);
+    const endAllowed = new Date();
+    endAllowed.setDate(endAllowed.getDate() + 14);
+    endAllowed.setHours(23, 59, 59, 999);
+
+    const results: { date: string; availableCount: number }[] = [];
+    const cursor = new Date(startAllowed);
+    while (cursor <= endAllowed) {
+      const dateStr = formatYMDLocal(cursor);
+      const slots = await generateTimeSlots(
+        Number(service_id),
+        Number(therapist_id),
+        dateStr,
+        30
+      );
+      const availableCount = slots.filter((s) => s.available).length;
+      results.push({ date: dateStr, availableCount });
+      cursor.setDate(cursor.getDate() + 1);
+    }
+
+    logEvent('info', 'available_dates_lookup', {
+      service_id,
+      therapist_id,
+      days: results.length,
+      nonEmptyDays: results.filter((r) => r.availableCount > 0).length,
+    });
+
+    res.json({ dates: results });
+  } catch (error) {
+    console.error('Get available dates error:', error);
+    logEvent('error', 'available_dates_error', { error: String(error) });
     res.status(500).json({ message: 'เกิดข้อผิดพลาด' });
   }
 };

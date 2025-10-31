@@ -36,6 +36,8 @@ export const adminAPI = {
 export const bookingsAPI = {
   getSlots: (params: { service_id: number; therapist_id: number; date: string }) =>
     api.get('/booking/slots', { params }),
+  getAvailableDates: (params: { service_id: number; therapist_id: number }) =>
+    api.get('/booking/available-dates', { params }),
   create: (data: { service_id: number; therapist_id: number; booking_datetime: string; promotion_id?: number; customer_phone: string; customer_name?: string }) =>
     api.post('/bookings', data),
   lookupByPhone: (phone: string) => api.get('/bookings/lookup', { params: { phone } }),

@@ -19,13 +19,13 @@ export const TimeBlockGrid = ({ slots, onSelectSlot, hourlyOnly = false }: TimeB
     return date.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
   };
 
-  const displaySlots = hourlyOnly
-    ? slots.filter((s) => new Date(s.start).getMinutes() === 0)
-    : slots;
+  const hourAligned = slots.filter((s) => new Date(s.start).getMinutes() === 0);
+  // Fallback: if hourlyOnly yields no slots, show all slots instead
+  const displaySlots = hourlyOnly ? (hourAligned.length > 0 ? hourAligned : slots) : slots;
 
   return (
     <div>
-  <h5 className="mb-3">Select Time Range</h5>
+  <h5 className="mb-3">เลือกช่วงเวลา</h5>
       <div className="row g-3">
         {displaySlots.map((slot, index) => (
           <div key={index} className="col-6 col-md-4 col-lg-3">
@@ -38,9 +38,9 @@ export const TimeBlockGrid = ({ slots, onSelectSlot, hourlyOnly = false }: TimeB
                 <div className="slot-time-sub small">- {formatTime(slot.end)}</div>
                 <div className="mt-3">
                   {slot.available ? (
-  <span className="status-badge available">Available</span>
+  <span className="status-badge available">พร้อมจอง</span>
                   ) : (
-  <span className="status-badge unavailable">Unavailable</span>
+  <span className="status-badge unavailable">ไม่ว่าง</span>
                   )}
                 </div>
               </Card.Body>
