@@ -6,6 +6,26 @@ interface TimeSlot {
   available: boolean;
 }
 
+// Helper to support both integer (epoch ms) and ISO string timestamps in SQLite
+const addWhereBetweenDate = (
+  qb: any,
+  column: string,
+  start: Date,
+  end: Date
+) => {
+  qb.whereBetween(column, [start.getTime(), end.getTime()])
+    .orWhereBetween(column, [start.toISOString(), end.toISOString()]);
+};
+
+const addWhereDateCompare = (
+  qb: any,
+  column: string,
+  op: string,
+  value: Date
+) => {
+  qb.where(column, op, value.getTime()).orWhere(column, op, value.toISOString());
+};
+
 /**
  * ตรวจสอบว่าช่วงเวลาทับซ้อนกันหรือไม่
  */
@@ -30,8 +50,12 @@ export const isTherapistAvailable = async (
   // Check if within schedule
   const schedule = await db('schedules')
     .where('therapist_id', therapistId)
-    .where('start_datetime', '<=', startTime)
-    .where('end_datetime', '>=', endTime)
+    .where((qb) => {
+      addWhereDateCompare(qb, 'start_datetime', '<=', startTime);
+    })
+    .where((qb) => {
+      addWhereDateCompare(qb, 'end_datetime', '>=', endTime);
+    })
     .first();
 
   if (!schedule) {
@@ -43,7 +67,7 @@ export const isTherapistAvailable = async (
     .where('therapist_id', therapistId)
     .whereNot('status', 'cancelled')
     .where((qb) => {
-      qb.where('booking_datetime', '<', endTime);
+      addWhereDateCompare(qb, 'booking_datetime', '<', endTime);
     });
 
   if (excludeBookingId) {
@@ -99,8 +123,9 @@ export const generateTimeSlots = async (
 
   const schedules = await db('schedules')
     .where('therapist_id', therapistId)
-    .where('start_datetime', '>=', startOfDay)
-    .where('start_datetime', '<=', endOfDay);
+    .where((qb) => {
+      addWhereBetweenDate(qb, 'start_datetime', startOfDay, endOfDay);
+    });
 
   if (schedules.length === 0) {
     return [];

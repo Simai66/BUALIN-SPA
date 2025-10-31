@@ -39,8 +39,8 @@ export async function seed(knex: Knex): Promise<void> {
     },
   ]);
 
-  // Insert services
-  const services = await knex('services').insert([
+  // Insert services (capture real IDs in insertion order)
+  const serviceInserts = [
     {
       name: 'นวดแผนไทย',
       description: 'นวดแผนไทยดั้งเดิม ผ่อนคลายกล้ามเนื้อ คลายความเมื่อยล้า',
@@ -81,13 +81,16 @@ export async function seed(knex: Knex): Promise<void> {
       image_path: '/uploads/hot-stone.jpg',
       is_active: true,
     },
-  ]).returning('id');
+  ];
+  const servicesRet = await knex('services').insert(serviceInserts).returning('id');
+  const serviceIds = servicesRet.map((r: any) => (typeof r === 'object' ? r.id : r));
 
   // Insert service prices (current prices)
   const now = new Date();
-  const priceInserts = services.map((id) => ({
+  const priceTable = [500, 800, 350, 600, 1200];
+  const priceInserts = serviceIds.map((id: number, idx: number) => ({
     service_id: id,
-    price: id === 1 ? 500 : id === 2 ? 800 : id === 3 ? 350 : id === 4 ? 600 : 1200,
+    price: priceTable[idx] || priceTable[priceTable.length - 1],
     started_at: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
     ended_at: null,
   }));
@@ -117,8 +120,8 @@ export async function seed(knex: Knex): Promise<void> {
     },
   ]);
 
-  // Insert therapists
-  await knex('therapists').insert([
+  // Insert therapists (capture real IDs in insertion order)
+  const therapistInserts = [
     {
       name: 'นวล จันทร์เพ็ญ',
       specialty: 'นวดแผนไทย, นวดอโรม่า',
@@ -137,7 +140,9 @@ export async function seed(knex: Knex): Promise<void> {
       bio: 'ประสบการณ์ 12 ปี เชี่ยวชาญการนวดบำบัด',
       is_active: true,
     },
-  ]);
+  ];
+  const therapistsRet = await knex('therapists').insert(therapistInserts).returning('id');
+  const therapistIds = therapistsRet.map((r: any) => (typeof r === 'object' ? r.id : r));
 
   // Insert schedules (next 7 days, 9 AM - 6 PM)
   const schedules = [];
@@ -145,13 +150,13 @@ export async function seed(knex: Knex): Promise<void> {
     const scheduleDate = new Date(today);
     scheduleDate.setDate(today.getDate() + day);
     
-    for (let therapistId = 1; therapistId <= 3; therapistId++) {
+    for (const therapistId of therapistIds) {
       const startTime = new Date(scheduleDate);
       startTime.setHours(9, 0, 0, 0);
-      
+
       const endTime = new Date(scheduleDate);
       endTime.setHours(18, 0, 0, 0);
-      
+
       schedules.push({
         therapist_id: therapistId,
         start_datetime: startTime,
@@ -178,11 +183,11 @@ export async function seed(knex: Knex): Promise<void> {
     {
       customer_name: 'ทดสอบ ผู้ใช้งาน',
       customer_phone: '0823456789',
-      service_id: 1,
-      therapist_id: 1,
+      service_id: serviceIds[0],
+      therapist_id: therapistIds[0],
       booking_datetime: tomorrow,
       status: 'confirmed',
-      price_at_booking: 500,
+      price_at_booking: priceTable[0],
       promotion_id: null,
     },
   ]);
