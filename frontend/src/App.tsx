@@ -17,6 +17,7 @@ import BookingHistory from './pages/BookingHistory';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/footer';
+import { ScrollToTop } from './components/ScrollToTop';
 
 const ProtectedRoute = ({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) => {
   const { isAuthenticated, user } = useAuthStore();
@@ -49,6 +50,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
