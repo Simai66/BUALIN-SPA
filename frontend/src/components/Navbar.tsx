@@ -28,11 +28,6 @@ export const Navbar = () => {
     };
   }, [expanded]);
 
-  const closeNavbarAndNavigate = (path: string) => {
-    setExpanded(false);
-    navigate(path);
-    // ScrollToTop component จะจัดการเลื่อนขึ้นบนสุดให้แล้ว
-  };
 
   const handleLogout = async () => {
     try {
@@ -59,7 +54,14 @@ export const Navbar = () => {
             <Nav.Link as={Link} to="/services" onClick={() => setExpanded(false)}>Services</Nav.Link>
             <Nav.Link as={Link} to="/booking/history" onClick={() => setExpanded(false)}>Booking History</Nav.Link>
             {isAuthenticated && user?.role === 'admin' && (
-              <Nav.Link as={Link} to="/admin" onClick={() => setExpanded(false)}>Dashboard</Nav.Link>
+              <>
+                <Nav.Link as={Link} to="/admin" onClick={() => setExpanded(false)}>Dashboard</Nav.Link>
+                <Nav.Link as={Link} to="/admin/services" onClick={() => setExpanded(false)}>Manage Services</Nav.Link>
+                <Nav.Link as={Link} to="/admin/therapists" onClick={() => setExpanded(false)}>Manage Therapists</Nav.Link>
+                <Nav.Link as={Link} to="/admin/schedule" onClick={() => setExpanded(false)}>Schedule</Nav.Link>
+                <Nav.Link as={Link} to="/admin/days-off" onClick={() => setExpanded(false)}>Manage Days Off</Nav.Link>
+                <Nav.Link as={Link} to="/admin/users" onClick={() => setExpanded(false)}>Manage Users</Nav.Link>
+              </>
             )}
           </Nav>
           <Nav className="align-items-center">

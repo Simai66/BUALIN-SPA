@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Table, Button, Form } from 'react-bootstrap';
-import { Navbar } from '../components/Navbar';
 import { adminAPI } from '../api/client';
 import {
   Chart as ChartJS,
@@ -89,14 +88,11 @@ export const AdminDashboard = () => {
 
   if (loading) {
     return (
-      <>
-        <Navbar />
-        <Container className="mt-5 text-center">
-          <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </Container>
-      </>
+      <Container className="mt-5 text-center">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </Container>
     );
   }
 
@@ -161,12 +157,10 @@ export const AdminDashboard = () => {
   };
 
   return (
-    <>
-      <Navbar />
-      <Container fluid className="mt-4">
+    <Container fluid className="mt-4">
         <Row className="mb-4">
           <Col>
-  <h2>Admin Dashboard</h2>
+            <h2>Admin Dashboard</h2>
           </Col>
           <Col md="auto">
             <Button variant="danger" onClick={handleExportPDF} className="me-2">
@@ -340,6 +334,5 @@ export const AdminDashboard = () => {
           </Col>
         </Row>
       </Container>
-    </>
   );
 };

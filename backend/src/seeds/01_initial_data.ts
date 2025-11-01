@@ -144,9 +144,9 @@ export async function seed(knex: Knex): Promise<void> {
   const therapistsRet = await knex('therapists').insert(therapistInserts).returning('id');
   const therapistIds = therapistsRet.map((r: any) => (typeof r === 'object' ? r.id : r));
 
-  // Insert schedules (next 7 days, 9 AM - 6 PM)
+  // Insert schedules (next 14 days, 9 AM - 6 PM)
   const schedules = [];
-  for (let day = 0; day < 7; day++) {
+  for (let day = 0; day < 14; day++) {
     const scheduleDate = new Date(today);
     scheduleDate.setDate(today.getDate() + day);
     

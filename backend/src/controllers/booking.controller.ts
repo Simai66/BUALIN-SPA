@@ -287,18 +287,47 @@ export const getAvailableDates = async (req: Request, res: Response) => {
     endAllowed.setDate(endAllowed.getDate() + 14);
     endAllowed.setHours(23, 59, 59, 999);
 
-    const results: { date: string; availableCount: number }[] = [];
+    const results: { date: string; availableCount: number; hasSchedule: boolean }[] = [];
     const cursor = new Date(startAllowed);
-    while (cursor <= endAllowed) {
-      const dateStr = formatYMDLocal(cursor);
-      const slots = await generateTimeSlots(
-        Number(service_id),
-        Number(therapist_id),
-        dateStr,
-        30
-      );
+  while (cursor <= endAllowed) {
+    const dateStr = formatYMDLocal(cursor);
+
+    // If therapist has a day off on this date, mark unavailable and continue
+    const dayOff = await db('therapist_days_off')
+      .where({ therapist_id: Number(therapist_id), day_off: dateStr })
+      .first();
+    if (dayOff) {
+      results.push({ date: dateStr, availableCount: 0, hasSchedule: false });
+      cursor.setDate(cursor.getDate() + 1);
+      continue;
+    }
+
+      // Determine if any schedules exist for this therapist on this date
+      const startOfDay = new Date(cursor);
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(cursor);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      const scheduleCountRow = await db('schedules')
+        .where('therapist_id', Number(therapist_id))
+        .where((qb) => {
+          qb
+            .whereBetween('start_datetime', [startOfDay.getTime(), endOfDay.getTime()])
+            .orWhereBetween('start_datetime', [startOfDay.toISOString(), endOfDay.toISOString()]);
+        })
+        .count('* as cnt')
+        .first();
+
+      const hasSchedule = Number((scheduleCountRow as any)?.cnt || 0) > 0;
+
+    const slots = await generateTimeSlots(
+      Number(service_id),
+      Number(therapist_id),
+      dateStr,
+      30
+    );
       const availableCount = slots.filter((s) => s.available).length;
-      results.push({ date: dateStr, availableCount });
+      results.push({ date: dateStr, availableCount, hasSchedule });
       cursor.setDate(cursor.getDate() + 1);
     }
 

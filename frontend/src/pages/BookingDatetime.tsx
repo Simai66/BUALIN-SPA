@@ -17,7 +17,7 @@ export const BookingDatetime = () => {
   const { selectedService, selectedTherapist, setDatetime } = useBookingStore();
   const [selectedDate, setSelectedDate] = useState('');
   const [slots, setSlots] = useState<TimeSlot[]>([]);
-  const [availableDates, setAvailableDates] = useState<{ date: string; availableCount: number }[]>([]);
+  const [availableDates, setAvailableDates] = useState<{ date: string; availableCount: number; hasSchedule?: boolean }[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [hourlyOnly, setHourlyOnly] = useState(false);
@@ -116,21 +116,21 @@ export const BookingDatetime = () => {
   return (
     <Container className="my-5">
       <div className="mb-3">
-  <h2 className="section-title">วันและเวลา</h2>
+  <h2 className="section-title">Date & Time</h2>
         <StepProgress current={3} />
       </div>
 
       <Row className="mb-4">
         <Col md={6}>
           <Alert variant="light" className="alert-brand">
-  <strong>บริการ:</strong> {selectedService?.name}<br />
-  <strong>พนักงาน:</strong> {selectedTherapist?.name}<br />
-  <strong>ระยะเวลา:</strong> {selectedService?.duration_minutes} นาที
+  <strong>Service:</strong> {selectedService?.name}<br />
+  <strong>Therapist:</strong> {selectedTherapist?.name}<br />
+  <strong>Duration:</strong> {selectedService?.duration_minutes} minutes
           </Alert>
         </Col>
         <Col md={6}>
           <Form.Group>
-  <Form.Label>เลือกวันที่</Form.Label>
+  <Form.Label>Select Date</Form.Label>
             <Form.Control
               type="date"
               value={selectedDate}
@@ -139,20 +139,20 @@ export const BookingDatetime = () => {
               max={formatYMDLocal(maxDate)}
             />
             <Form.Text className="text-muted">
-              สามารถจองล่วงหน้าได้ 1-14 วัน
+              You can book 1–14 days ahead
             </Form.Text>
           </Form.Group>
           <Form.Check
             type="switch"
             id="hourly-only-switch"
             className="mt-3"
-  label="แสดงเฉพาะช่วงชั่วโมง"
+  label="Show hourly only"
             checked={hourlyOnly}
             onChange={(e) => setHourlyOnly(e.target.checked)}
           />
           <div className="mt-3 d-flex">
             <Button variant="primary" onClick={handleSelectEarliest} disabled={loading || slots.length === 0}>
-  เลือกเวลาที่เร็วที่สุด
+  Select Earliest Time
             </Button>
           </div>
         </Col>
@@ -163,7 +163,7 @@ export const BookingDatetime = () => {
       {loading ? (
         <div className="text-center py-5">
           <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">กำลังโหลด...</span>
+            <span className="visually-hidden">Loading...</span>
           </div>
         </div>
       ) : (
@@ -177,10 +177,10 @@ export const BookingDatetime = () => {
             />
           ) : (
             <Alert variant="warning">
-              ไม่มีช่วงเวลาว่างสำหรับวันที่ที่เลือก
+              No available time slots for the selected date.
               {availableDates.length > 0 && (
                 <>
-                  {' '}ลองวันที่ {availableDates.find((d) => d.availableCount > 0)?.date || 'อื่นๆ'} แทน หรือเลือกจากรายการด้านล่าง
+                  {' '}Try {availableDates.find((d) => d.availableCount > 0)?.date || 'another date'} or choose from the list below.
                 </>
               )}
             </Alert>
@@ -189,7 +189,7 @@ export const BookingDatetime = () => {
           {/* Available dates list */}
           {availableDates.length > 0 && (
             <div className="mt-3">
-              <div className="mb-2 fw-bold">วันที่ที่มีคิวว่าง</div>
+              <div className="mb-2 fw-bold">Dates with availability</div>
               <div className="d-flex flex-wrap gap-2">
                 {availableDates.map((d) => (
                   <Button
@@ -199,7 +199,7 @@ export const BookingDatetime = () => {
                     disabled={d.availableCount === 0}
                     onClick={() => setSelectedDate(d.date)}
                   >
-                    {d.date} {d.availableCount > 0 ? `(${d.availableCount})` : '(เต็ม)'}
+                    {d.date} {d.availableCount > 0 ? `(${d.availableCount})` : (d.hasSchedule ? '(Full)' : '(Closed)')}
                   </Button>
                 ))}
               </div>
@@ -208,7 +208,7 @@ export const BookingDatetime = () => {
                 const current = availableDates.find((d) => d.date === selectedDate);
                 if (current && current.availableCount > 0 && current.availableCount <= 2) {
                   return (
-                    <Alert className="mt-2" variant="info">คิวใกล้เต็มในวันที่ {selectedDate} กรุณาจองโดยเร็ว</Alert>
+                    <Alert className="mt-2" variant="info">Slots nearly full on {selectedDate}. Please book soon.</Alert>
                   );
                 }
                 return null;
@@ -218,7 +218,7 @@ export const BookingDatetime = () => {
 
           <div className="mt-4">
             <Button variant="secondary" onClick={handleBack}>
-              ← ย้อนกลับ
+              ← Back
             </Button>
           </div>
         </>

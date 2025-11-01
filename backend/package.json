@@ -12,7 +12,8 @@
     "db:reset": "rm -f database.sqlite && npm run migrate && npm run seed",
     "health": "tsx scripts/healthcheck.ts",
     "health:json": "tsx scripts/healthcheck.ts --format=json",
-    "test:smoke": "npm run health"
+    "test:smoke": "npm run health",
+    "create-admin": "tsx scripts/create-admin.ts"
   },
   "keywords": [],
   "author": "",

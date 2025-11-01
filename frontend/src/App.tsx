@@ -15,6 +15,11 @@ import { BookingDatetime } from './pages/BookingDatetime';
 import { BookingConfirm } from './pages/BookingConfirm';
 import BookingHistory from './pages/BookingHistory';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { AdminServices } from './pages/AdminServices';
+import { AdminTherapists } from './pages/AdminTherapists';
+import { AdminDaysOff } from './pages/AdminDaysOff';
+import { AdminUsers } from './pages/AdminUsers';
+import { AdminSchedule } from './pages/AdminSchedule';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/footer';
 import { ScrollToTop } from './components/ScrollToTop';
@@ -72,6 +77,46 @@ function App() {
           element={
             <ProtectedRoute adminOnly>
               <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/services"
+          element={
+            <ProtectedRoute adminOnly>
+              <AdminServices />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/therapists"
+          element={
+            <ProtectedRoute adminOnly>
+              <AdminTherapists />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/days-off"
+          element={
+            <ProtectedRoute adminOnly>
+              <AdminDaysOff />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/schedule"
+          element={
+            <ProtectedRoute adminOnly>
+              <AdminSchedule />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute adminOnly>
+              <AdminUsers />
             </ProtectedRoute>
           }
         />

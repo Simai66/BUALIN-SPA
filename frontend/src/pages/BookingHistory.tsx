@@ -48,20 +48,6 @@ const BookingHistory: React.FC = () => {
     timeStyle: 'short',
   });
 
-  const statusVariant = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return 'warning';
-      case 'confirmed':
-        return 'success';
-      case 'done':
-        return 'primary';
-      case 'cancelled':
-        return 'secondary';
-      default:
-        return 'light';
-    }
-  };
 
   const statusLabel = (status: string) => {
     switch (status.toLowerCase()) {

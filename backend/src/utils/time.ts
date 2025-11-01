@@ -1,4 +1,5 @@
 import { db } from '../config/db';
+import { formatYMDLocal } from './date';
 
 interface TimeSlot {
   start: Date;
@@ -47,6 +48,15 @@ export const isTherapistAvailable = async (
   endTime: Date,
   excludeBookingId?: number
 ): Promise<boolean> => {
+  // Block if this date is a marked day off
+  const dayStr = formatYMDLocal(startTime);
+  const dayOff = await db('therapist_days_off')
+    .where({ therapist_id: therapistId, day_off: dayStr })
+    .first();
+  if (dayOff) {
+    return false;
+  }
+
   // Check if within schedule
   const schedule = await db('schedules')
     .where('therapist_id', therapistId)
@@ -107,6 +117,14 @@ export const generateTimeSlots = async (
   date: string, // YYYY-MM-DD
   stepMinutes: number = 30
 ): Promise<TimeSlot[]> => {
+  // If therapist has a day off, no slots for this date
+  const dayOff = await db('therapist_days_off')
+    .where({ therapist_id: therapistId, day_off: date })
+    .first();
+  if (dayOff) {
+    return [];
+  }
+
   const service = await db('services').where('id', serviceId).first();
   if (!service) {
     return [];

@@ -16,7 +16,7 @@ interface TimeBlockGridProps {
 export const TimeBlockGrid = ({ slots, onSelectSlot, hourlyOnly = false }: TimeBlockGridProps) => {
   const formatTime = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
   };
 
   const hourAligned = slots.filter((s) => new Date(s.start).getMinutes() === 0);
@@ -25,7 +25,7 @@ export const TimeBlockGrid = ({ slots, onSelectSlot, hourlyOnly = false }: TimeB
 
   return (
     <div>
-  <h5 className="mb-3">เลือกช่วงเวลา</h5>
+  <h5 className="mb-3">Select a time window</h5>
       <div className="row g-3">
         {displaySlots.map((slot, index) => (
           <div key={index} className="col-6 col-md-4 col-lg-3">
@@ -38,9 +38,9 @@ export const TimeBlockGrid = ({ slots, onSelectSlot, hourlyOnly = false }: TimeB
                 <div className="slot-time-sub small">- {formatTime(slot.end)}</div>
                 <div className="mt-3">
                   {slot.available ? (
-  <span className="status-badge available">พร้อมจอง</span>
+                    <span className="status-badge available">Available</span>
                   ) : (
-  <span className="status-badge unavailable">ไม่ว่าง</span>
+                    <span className="status-badge unavailable">Unavailable</span>
                   )}
                 </div>
               </Card.Body>
